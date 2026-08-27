@@ -10,106 +10,47 @@
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" href="./icon.svg">
 <link rel="apple-touch-icon" href="./apple-touch-icon.png">
-<title>ORZ COMMAND CENTER v0.4.1</title>
+<title>ORZ COMMAND CENTER v0.4.2</title>
 <style>
 :root{--bg:#070a10;--panel:#111722;--line:#263249;--text:#f5f7fb;--muted:#aeb8c6;--blue:#73b8ff;--violet:#a493ff;--green:#3dde98;--amber:#ffc969;--red:#ff6f7d}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#070a10;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif}
 body{background:radial-gradient(circle at 85% -5%,rgba(128,113,255,.18),transparent 32%),linear-gradient(180deg,#070a10,#0b1018 48%,#070a10)}
 .app{max-width:900px;margin:auto;padding:calc(16px + env(safe-area-inset-top)) 14px calc(88px + env(safe-area-inset-bottom))}
 header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:4px 2px 16px}.brand{display:flex;align-items:center;gap:11px}.mark{width:42px;height:42px;border:1px solid #30405b;border-radius:13px;display:grid;place-items:center;font-weight:900;font-size:11px;background:#0d1420}.brand h1{margin:0;font-size:17px}.brand p{margin:3px 0 0;font-size:10px;color:var(--muted)}
-button{background:#101722;color:var(--text);border:1px solid #34445f;border-radius:999px;padding:8px 11px;font-weight:800;font-size:10px}
-.hero,.card{background:rgba(17,23,34,.96);border:1px solid var(--line);box-shadow:0 15px 38px rgba(0,0,0,.22)}.hero{border-radius:24px;padding:19px;overflow:hidden}.eyebrow,.label{font-size:10px;font-weight:800;letter-spacing:.1em;color:var(--muted)}.health{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:800;margin-top:12px}.dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 14px var(--green)}.version{font-size:36px;font-weight:900;margin:8px 0 16px}.version span{color:var(--blue)}
-.hero-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.mini{font-size:10px;color:var(--muted);line-height:1.45}.mini b{font-size:11px;color:var(--text)}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:11px}.card{border-radius:18px;padding:14px}.value{font-size:23px;font-weight:900;margin-top:7px}.blue{color:var(--blue)}.green{color:var(--green)}.violet{color:var(--violet)}.amber{color:var(--amber)}.red{color:var(--red)}
-.section{margin-top:14px}.section-title{font-size:11px;font-weight:900;letter-spacing:.08em;color:#c4cfdb;margin:0 0 8px 4px}.row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}.row:last-child{border:0}.pill{font-size:10px;font-weight:900;padding:5px 8px;border-radius:999px;border:1px solid currentColor;white-space:nowrap}
-.next{background:linear-gradient(135deg,rgba(115,184,255,.10),rgba(164,147,255,.08))}.next .value{font-size:29px}.notice{border-color:#5b4b31;background:linear-gradient(135deg,rgba(255,201,105,.08),rgba(17,23,34,.96))}
-.timeline{position:relative;padding-left:20px}.timeline:before{content:"";position:absolute;left:6px;top:9px;bottom:9px;width:2px;background:var(--line)}.step{position:relative;padding:8px 0 12px}.step:before{content:"";position:absolute;left:-18px;top:13px;width:10px;height:10px;border-radius:50%;background:#39475d}.step.done:before{background:var(--green)}.step.current:before{background:var(--amber)}.step b{font-size:12px}.step div{font-size:10px;color:var(--muted);margin-top:3px}
-body.showcase .private{filter:blur(8px);pointer-events:none}
-nav{position:fixed;z-index:10;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(5,1fr);background:rgba(7,10,16,.94);backdrop-filter:blur(18px);border-top:1px solid var(--line);padding:7px 8px calc(7px + env(safe-area-inset-bottom))}.tab{text-align:center;color:var(--muted);font-size:9px}.tab i{display:block;font-style:normal;font-size:16px;margin-bottom:2px}.tab.active{color:var(--blue)}
-.install{display:none;margin-top:12px}.install.show{display:block}
-@media(min-width:760px){.grid{grid-template-columns:repeat(4,1fr)}}
+button{background:#101722;color:var(--text);border:1px solid #34445f;border-radius:999px;padding:8px 11px;font-weight:800;font-size:10px}.hero,.card{background:rgba(17,23,34,.96);border:1px solid var(--line);box-shadow:0 15px 38px rgba(0,0,0,.22)}.hero{border-radius:24px;padding:19px;overflow:hidden}.eyebrow,.label{font-size:10px;font-weight:800;letter-spacing:.1em;color:var(--muted)}.health{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:800;margin-top:12px}.dot{width:8px;height:8px;border-radius:50%;background:var(--amber);box-shadow:0 0 14px var(--amber)}.version{font-size:36px;font-weight:900;margin:8px 0 16px}.version span{color:var(--blue)}
+.hero-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.mini{font-size:10px;color:var(--muted);line-height:1.45}.mini b{font-size:11px;color:var(--text)}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:11px}.card{border-radius:18px;padding:14px}.value{font-size:23px;font-weight:900;margin-top:7px}.blue{color:var(--blue)}.green{color:var(--green)}.violet{color:var(--violet)}.amber{color:var(--amber)}.red{color:var(--red)}
+.section{margin-top:14px}.section-title{font-size:11px;font-weight:900;letter-spacing:.08em;color:#c4cfdb;margin:0 0 8px 4px}.row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}.row:last-child{border:0}.pill{font-size:10px;font-weight:900;padding:5px 8px;border-radius:999px;border:1px solid currentColor;white-space:nowrap}.next{background:linear-gradient(135deg,rgba(115,184,255,.10),rgba(164,147,255,.08))}.next .value{font-size:25px}.notice{border-color:#5b4b31;background:linear-gradient(135deg,rgba(255,201,105,.08),rgba(17,23,34,.96))}.timeline{position:relative;padding-left:20px}.timeline:before{content:"";position:absolute;left:6px;top:9px;bottom:9px;width:2px;background:var(--line)}.step{position:relative;padding:8px 0 12px}.step:before{content:"";position:absolute;left:-18px;top:13px;width:10px;height:10px;border-radius:50%;background:#39475d}.step.done:before{background:var(--green)}.step.current:before{background:var(--amber)}.step b{font-size:12px}.step div{font-size:10px;color:var(--muted);margin-top:3px}body.showcase .private{filter:blur(8px);pointer-events:none}nav{position:fixed;z-index:10;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(5,1fr);background:rgba(7,10,16,.94);backdrop-filter:blur(18px);border-top:1px solid var(--line);padding:7px 8px calc(7px + env(safe-area-inset-bottom))}.tab{text-align:center;color:var(--muted);font-size:9px}.tab i{display:block;font-style:normal;font-size:16px;margin-bottom:2px}.tab.active{color:var(--blue)}.install{display:none;margin-top:12px}.install.show{display:block}@media(min-width:760px){.grid{grid-template-columns:repeat(4,1fr)}}
 </style>
 </head>
 <body>
 <div class="app">
-<header>
- <div class="brand"><div class="mark">ORZ</div><div><h1>ORZ COMMAND CENTER</h1><p>AI自動売買戦略 開発・検証システム</p></div></div>
- <button id="showcase">公開表示</button>
-</header>
-
+<header><div class="brand"><div class="mark">ORZ</div><div><h1>ORZ COMMAND CENTER</h1><p>AI自動売買戦略 開発・検証システム</p></div></div><button id="showcase">公開表示</button></header>
 <section class="hero">
  <div class="eyebrow">開発状況 / ミッションコントロール</div>
- <div class="health"><span class="dot"></span>システム正常</div>
+ <div class="health"><span class="dot"></span>Evidence整合確認中</div>
  <div class="version">S2 <span>v0.3.0</span></div>
  <div class="hero-grid">
-  <div class="mini">最新検証<br><b class="green">GP014A / PASS</b></div>
-  <div class="mini">次の工程<br><b class="amber">GP014B</b></div>
+  <div class="mini">正式Repository Evidence<br><b class="green">GP013A / PASS</b></div>
+  <div class="mini">Working Context<br><b class="amber">GP014A / PASS（未照合）</b></div>
   <div class="mini">安全モード<br><b>FAIL-CLOSED</b></div>
  </div>
 </section>
-
 <div class="grid">
  <div class="card"><div class="label">現在の開発状態</div><div class="value blue">S2 v0.3.0</div><div class="mini">現在の開発系統</div></div>
- <div class="card"><div class="label">最新検証</div><div class="value green">GP014A</div><div class="mini">正式結果：PASS</div></div>
- <div class="card"><div class="label">GitHub記録</div><div class="value violet">GP013A</div><div class="mini">リポジトリ上の証拠</div></div>
- <div class="card"><div class="label">同期状態</div><div class="value amber">差異</div><div class="mini">整合確認が必要</div></div>
+ <div class="card"><div class="label">正式Repository Evidence</div><div class="value green">GP013A</div><div class="mini">正式結果：PASS</div></div>
+ <div class="card"><div class="label">Working Context</div><div class="value amber">GP014A</div><div class="mini">PASS（未照合・正式昇格前）</div></div>
+ <div class="card"><div class="label">同期状態</div><div class="value amber">GAP</div><div class="mini">Evidence Lineage整合確認が必要</div></div>
 </div>
-
-<div class="section">
- <div class="card next"><div class="label">次の一手</div><div class="value">GP014B　<span class="blue">→</span></div><div class="mini">証拠を優先 / 未検証のまま次工程へ進めない</div></div>
+<div class="section"><div class="card next"><div class="label">次の一手</div><div class="value">GP014B <span class="blue">→</span></div><div class="mini">GP014AのEvidence Lineage整合後に進行。未照合状態は正式Evidenceへ昇格しません。</div></div></div>
+<div class="section"><div class="section-title">Evidence Authority</div><div class="card notice"><div class="row"><span>正式Repository Evidence</span><span class="pill green">GP013A / PASS</span></div><div class="row"><span>Working Context</span><span class="pill amber">GP014A / 未照合</span></div><div class="row"><span>同期状態</span><span class="pill amber">GAP_DETECTED</span></div><div class="row"><span>判定</span><span class="pill amber">要整合確認</span></div></div></div>
+<div class="section"><div class="section-title">安全管理</div><div class="card"><div class="row"><span>Fail-Closed</span><span class="pill green">有効</span></div><div class="row"><span>リアルマネー</span><span class="pill red">禁止</span></div><div class="row"><span>ライブ取引操作</span><span class="pill red">未搭載</span></div><div class="row"><span>Canonical / Frozen 自動変更</span><span class="pill red">禁止</span></div></div></div>
+<div class="section"><div class="section-title">開発履歴</div><div class="card"><div class="timeline"><div class="step done"><b>GP001–GP012</b><div>実行安全ゲートを正式通過。</div></div><div class="step done"><b>GP013A / Repository Evidence</b><div>正式Repository Evidenceとして確認済み。</div></div><div class="step current"><b>GP014A / Working Context</b><div>PASSの作業状態。ただしEvidence Lineage未照合のため正式昇格しない。</div></div><div class="step"><b>GP014B / 次の工程</b><div>整合確認後に進行。</div></div></div></div></div>
+<div class="card install" id="installHelp"><div class="label">iPhoneへ追加</div><div style="font-weight:800;margin-top:7px">Safariの共有 →「ホーム画面に追加」</div><div class="mini" style="margin-top:5px">HTTPS公開後、ORZ専用アプリとしてホーム画面から起動できます。</div></div>
+<div class="section"><div class="card"><div class="label">公開版について</div><div class="mini" style="margin-top:7px">この公開版にはEA本体・口座情報・機密Evidence・秘密情報を含めません。公開画面は表示層であり、Evidence Authorityではありません。</div></div></div>
 </div>
-
-<div class="section">
- <div class="section-title">GitHub同期</div>
- <div class="card notice">
-  <div class="row"><span>現在の開発状態</span><span class="pill blue">GP014A</span></div>
-  <div class="row"><span>GitHub記録</span><span class="pill violet">GP013A</span></div>
-  <div class="row"><span>判定</span><span class="pill amber">要整合確認</span></div>
- </div>
-</div>
-
-<div class="section">
- <div class="section-title">安全管理</div>
- <div class="card">
-  <div class="row"><span>Fail-Closed</span><span class="pill green">有効</span></div>
-  <div class="row"><span>リアルマネー</span><span class="pill red">禁止</span></div>
-  <div class="row"><span>ライブ取引操作</span><span class="pill red">未搭載</span></div>
-  <div class="row"><span>Canonical / Frozen 自動変更</span><span class="pill red">禁止</span></div>
- </div>
-</div>
-
-<div class="section">
- <div class="section-title">開発履歴</div>
- <div class="card"><div class="timeline">
-  <div class="step done"><b>GP001–GP012</b><div>実行安全ゲートを正式通過。</div></div>
-  <div class="step done"><b>GP013A / GitHub Evidence</b><div>GitHub上の記録を確認済み。</div></div>
-  <div class="step done"><b>GP014A / Working State</b><div>現在の開発状態ではPASS。</div></div>
-  <div class="step current"><b>GP014B / 次の工程</b><div>証拠チェーンの整合確認完了まで昇格しない。</div></div>
- </div></div>
-</div>
-
-<div class="card install" id="installHelp">
- <div class="label">iPhoneへ追加</div>
- <div style="font-weight:800;margin-top:7px">Safariの共有 →「ホーム画面に追加」</div>
- <div class="mini" style="margin-top:5px">HTTPSで公開後、ORZ専用アプリとしてホーム画面から起動できます。</div>
-</div>
-
-<div class="section">
- <div class="card">
-  <div class="label">公開版について</div>
-  <div class="mini" style="margin-top:7px">この公開版にはEA本体・口座情報・機密Evidence・秘密情報を含めません。</div>
- </div>
-</div>
-</div>
-
-<nav>
- <div class="tab active"><i>◉</i>司令塔</div><div class="tab"><i>⌁</i>戦略</div><div class="tab"><i>◇</i>証拠</div><div class="tab"><i>↗</i>成績</div><div class="tab"><i>✦</i>AI</div>
-</nav>
+<nav><div class="tab active"><i>◉</i>司令塔</div><div class="tab"><i>⌁</i>戦略</div><div class="tab"><i>◇</i>証拠</div><div class="tab"><i>↗</i>成績</div><div class="tab"><i>✦</i>AI</div></nav>
 <script>
-document.getElementById('showcase').onclick=()=>{
- document.body.classList.toggle('showcase');
- document.getElementById('showcase').textContent=document.body.classList.contains('showcase')?'公開表示 ON':'公開表示';
-};
+document.getElementById('showcase').onclick=()=>{document.body.classList.toggle('showcase');document.getElementById('showcase').textContent=document.body.classList.contains('showcase')?'公開表示 ON':'公開表示';};
 if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('./sw.js');
 if(/iPhone|iPad|iPod/.test(navigator.userAgent) && !window.navigator.standalone) document.getElementById('installHelp').classList.add('show');
 </script>
