@@ -1,24 +1,25 @@
 {
   "project": "ORZ_EA",
   "schema_version": "public-0.1",
+  "release_channel": "v0.4.3",
   "repository_evidence": {
-    "latest_proof": "GP013A",
+    "latest_proof": "GP014A",
     "result": "PASS",
     "authority": "REPOSITORY_EVIDENCE"
   },
   "working_context": {
     "latest_proof": "GP014A",
     "result": "PASS",
-    "authority": "WORKING_CONTEXT_UNRECONCILED",
-    "reconciled": false
+    "authority": "WORKING_CONTEXT_RECONCILED",
+    "reconciled": true
   },
-  "next_action": "GP014B_AFTER_RECONCILIATION",
-  "sync_state": "GAP_DETECTED",
+  "next_action": "GP014B_PENDING_SEPARATE_AUTHORIZATION",
+  "sync_state": "SYNCED_OR_REPOSITORY_AHEAD",
   "safety": {
     "fail_closed": true,
     "real_money": "PROHIBITED",
     "live_trade_control": "NOT_PRESENT_IN_COMMAND_CENTER",
     "canonical_frozen_auto_edit": "BLOCKED"
   },
-  "public_notice": "正式Repository EvidenceとWorking Contextを分離表示しています。未照合状態を正式Evidenceへ昇格しません。"
+  "public_notice": "GP014AはRepository Evidenceと照合済みです。GP014BはPENDINGであり、この公開状態は実行許可を与えません。"
 }
