@@ -23,6 +23,8 @@ It does **not** contain:
 - Live trade control: not present
 - Canonical / Frozen auto-edit: blocked
 - `public-status.json`: network-only / `no-store`; stale cached PASS is not accepted
+- Snapshot freshness is evaluated from `snapshot_generated_at_jst`, the last verified public-state reconciliation time
+- Source commit time is provenance only and does not by itself make a freshly revalidated snapshot stale
 - UI state is not an authorization channel
 
 ## App sections
