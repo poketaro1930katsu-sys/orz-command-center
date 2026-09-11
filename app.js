@@ -210,7 +210,8 @@
     document.querySelectorAll('.tab').forEach(b=>{
       const active=b.dataset.tab===name;
       b.classList.toggle('active',active);
-      b.setAttribute('aria-selected', String(active));
+      if(active) b.setAttribute('aria-current','page');
+      else b.removeAttribute('aria-current');
     });
     if(updateHash && location.hash !== `#${name}`) history.replaceState(null,'',`#${name}`);
     window.scrollTo({top:0,behavior:'smooth'});
