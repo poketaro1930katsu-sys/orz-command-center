@@ -171,12 +171,33 @@ jobs:
           assert evidence['prior_ci']['run_id']==34633571706
           assert evidence['prior_ci']['run_number']==10
           assert evidence['prior_ci']['conclusion']=='success'
+
+          expected_paths={
+              'index.html',
+              'styles.css',
+              'app.js',
+              'public-status.json',
+              'sw.js',
+              'manifest.webmanifest',
+              'README.md',
+              'README_PUBLIC.md',
+              '.github/workflows/public-pwa-ci.yml',
+          }
+          paths=[item['path'] for item in evidence['files']]
+          assert len(paths)==len(set(paths)), 'duplicate evidence manifest path'
+          assert set(paths)==expected_paths, f'evidence manifest coverage mismatch: {sorted(set(paths)^expected_paths)}'
+          for raw_path in paths:
+              path=Path(raw_path)
+              assert not path.is_absolute(), raw_path
+              assert '..' not in path.parts, raw_path
+              assert path.is_file(), raw_path
+
           for item in evidence['files']:
               path=Path(item['path'])
               data=path.read_bytes()
               assert len(data)==item['size'], item['path']
               assert hashlib.sha256(data).hexdigest().upper()==item['sha256'], item['path']
-          print('evidence manifest hashes valid')
+          print('evidence manifest coverage and hashes valid')
           PY
 
       - name: Validate manifest and release consistency
