@@ -42,8 +42,8 @@
                   },
                   {
                       "path":  "app.js",
-                      "size":  13355,
-                      "sha256":  "A687458069A7A531F0933D451EE50B9FBC0978536601FFF9D6FEC564735CDCDB"
+                      "size":  13586,
+                      "sha256":  "BB437524667E232DA8985086DBFEDB7CAFCE41399D81FFB50AD06E3348A40F19"
                   },
                   {
                       "path":  "public-status.json",
@@ -72,9 +72,9 @@
                   },
                   {
                       "path":  ".github/workflows/public-pwa-ci.yml",
-                      "size":  8461,
-                      "sha256":  "FD1EB3497EE457D916DD90834B19837A4B1236A46B82CCCF1598A6247A699D2C"
+                      "size":  9030,
+                      "sha256":  "536BB57C91130BF9291C521873969A71C3E34B1A3D150921B11B83A208DBEA8D"
                   }
               ],
-    "note":  "SHA256 manifest binds the release-candidate application files. The manifest intentionally does not hash itself. Source authority was re-read at snapshot generation time and remained on the recorded main SHA; the HC1 candidate remains non-Canonical. Freshness is now based on the verified public snapshot timestamp, while source commit time is provenance only. Stale (>72h), invalid, or materially future-dated public snapshots fail closed before PASS values render. Runtime schema guards reject release/schema/source/safety/performance boundary drift. Production main merge/deployment remains a separate Human Decision. Bottom navigation accessibility was hardened to use aria-current for the current navigation destination instead of aria-selected without tab semantics; CI locks this contract."
+    "note":  "SHA256 manifest binds the release-candidate application files. The manifest intentionally does not hash itself. Source authority was re-read at snapshot generation time and remained on the recorded main SHA; the HC1 candidate remains non-Canonical. Freshness is based on the verified public snapshot timestamp, while source commit time is provenance only. Stale (>72h), invalid, or materially future-dated public snapshots fail closed before PASS values render. A later refresh failure also clears previously rendered release/proof/source/gate values and the machine-readable source timestamp so stale verified state cannot remain visible under a FAIL-CLOSED banner. Runtime schema guards reject release/schema/source/safety/performance boundary drift. Production main merge/deployment remains a separate Human Decision. Bottom navigation accessibility uses aria-current for the current navigation destination instead of aria-selected without tab semantics; CI locks both accessibility and stale-value clearing contracts."
 }
