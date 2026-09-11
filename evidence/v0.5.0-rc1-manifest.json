@@ -37,8 +37,8 @@
                   },
                   {
                       "path":  "styles.css",
-                      "size":  8119,
-                      "sha256":  "285679A9DCEA19D616D01DDFE8DE8480322C60DA55160A1BBF32AC6438BE39AE"
+                      "size":  8196,
+                      "sha256":  "7A28048180B70FA58BEDB481D073A7B252F4174BF560C4258143FFF46E096B08"
                   },
                   {
                       "path":  "app.js",
@@ -76,5 +76,5 @@
                       "sha256":  "536BB57C91130BF9291C521873969A71C3E34B1A3D150921B11B83A208DBEA8D"
                   }
               ],
-    "note":  "SHA256 manifest binds the release-candidate application files. The manifest intentionally does not hash itself. Source authority was re-read at snapshot generation time and remained on the recorded main SHA; the HC1 candidate remains non-Canonical. Freshness is based on the verified public snapshot timestamp, while source commit time is provenance only. Stale (>72h), invalid, or materially future-dated public snapshots fail closed before PASS values render. A later refresh failure also clears previously rendered release/proof/source/gate values and the machine-readable source timestamp so stale verified state cannot remain visible under a FAIL-CLOSED banner. Runtime schema guards reject release/schema/source/safety/performance boundary drift. Production main merge/deployment remains a separate Human Decision. Bottom navigation accessibility uses aria-current for the current navigation destination instead of aria-selected without tab semantics; CI locks both accessibility and stale-value clearing contracts."
+    "note":  "SHA256 manifest binds the release-candidate application files. The manifest intentionally does not hash itself. Source authority was re-read at snapshot generation time and remained on the recorded main SHA; the HC1 candidate remains non-Canonical. Freshness is based on the verified public snapshot timestamp, while source commit time is provenance only. Stale (>72h), invalid, or materially future-dated public snapshots fail closed before PASS values render. A later refresh failure also clears previously rendered release/proof/source/gate values and the machine-readable source timestamp so stale verified state cannot remain visible under a FAIL-CLOSED banner. Runtime schema guards reject release/schema/source/safety/performance boundary drift. Production main merge/deployment remains a separate Human Decision. Bottom navigation accessibility uses aria-current for the current navigation destination instead of aria-selected without tab semantics; CI locks both accessibility and stale-value clearing contracts. Fail-Closed visual state is also safety-consistent: the hero health indicator changes to red instead of retaining the normal green state when Evidence validation fails."
 }
