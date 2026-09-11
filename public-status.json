@@ -5,8 +5,8 @@
   "source": {
     "repository": "poketaro1930katsu-sys/orz-ea-development",
     "branch": "main",
-    "main_sha": "6c71eb07163550c9ab70ccbcc2db1ffb25063a06",
-    "main_commit_at_jst": "2026-09-12T00:40:36+09:00",
+    "main_sha": "04d80a85d9fb1b5660bee3c9a5f8a9f5b6c9c9eb",
+    "main_commit_at_jst": "2026-09-12T01:44:31+09:00",
     "authority": "REPOSITORY_EVIDENCE"
   },
   "canonical": {
@@ -24,14 +24,16 @@
     "status": "PENDING_SEPARATE_AUTHORIZATION",
     "next_gate": "GP014B",
     "runtime_authorized": false,
-    "next_gate_note": "GP014BはPENDINGです。Repository Evidenceの更新やCanonical v0.3.1への昇格は、GP014B runtime・取引・実資金の許可を意味しません。",
-    "summary": "GP014Aは正式Evidenceとして維持され、GP014Bは準備・確認段階です。Strategy runtimeは未許可のままです。",
+    "next_gate_note": "GP014BはPENDINGです。HC1 implementation candidateのEvidence記録・compile/runtime PASSは、GP014B runtime・取引・実資金の許可を意味しません。",
+    "summary": "GP014Aは正式Evidenceとして維持され、Post-V031 HC1 implementation candidateはRepository Evidenceに記録済みです。Canonicalはv0.3.1のまま、GP014B runtimeは未許可です。",
     "confirmed": [
       "GP014A / PASS のRepository Evidence",
       "Canonical v0.3.1 のpromotion record",
-      "Post-V031のEvidence-only planning gate"
+      "Post-V031 HC1 candidate: compile 0 errors / 0 warnings",
+      "Post-V031 HC1 candidate: Demo runtime 7/7 PASS / final positions 0 / orders 0"
     ],
     "not_authorized": [
+      "HC1 candidateのCanonical promotion",
       "GP014B runtime",
       "Live trading / real-money execution",
       "自動WAIT→ENTRY / SKIP / CONTINUE",
@@ -39,12 +41,21 @@
     ]
   },
   "implementation_gate": {
-    "name": "POST_V031_HUMAN_CONFIRMED_PLUMBING_GATE",
-    "status": "EVIDENCE_BOUNDARY_LOCKED",
-    "status_short": "LOCKED",
+    "name": "POST_V031_HUMAN_CONFIRMED_HC1",
+    "status": "HC1_IMPLEMENTATION_CANDIDATE_EVIDENCE_RECORDED_NOT_CANONICAL",
+    "status_short": "HC1 CANDIDATE",
     "source_implementation_authorized": false,
     "next_version_label": "UNRESOLVED_DO_NOT_INFER",
-    "allowed_scope_summary": "Evidence-preserving state/schema/logger/observability と human-confirmed / manually supplied / TEST_PARAMETER plumbing の境界定義のみ。"
+    "allowed_scope_summary": "Human-confirmed plumbing candidateのEvidence記録済み。追加実装・Canonical promotion・GP014B runtime・取引は別Gateです。",
+    "candidate": {
+      "label": "POST_V031_HUMAN_CONFIRMED_HC1",
+      "source_sha256": "5DAA717402C99D8E224D4E0D7B6A506E3C658E88E80AFB157D9C8651113B1579",
+      "ex5_sha256": "AF0C88B12A7E79B91239A8BE5CC991F2AD6E2C83A93E087BEC7FE90AD97E1718",
+      "compile_result": "0_ERRORS_0_WARNINGS",
+      "runtime_cases": "7_OF_7_PASS",
+      "repository_record": "PR_44_MERGED",
+      "canonical_promoted": false
+    }
   },
   "performance": {
     "published": false,
@@ -60,5 +71,5 @@
     "private_evidence_exposed": false,
     "credentials_exposed": false
   },
-  "public_notice": "この公開PWAはREAD-ONLY可視化層です。画面表示は実行許可ではありません。未確認・古い・不整合な状態は自動でPASSへ昇格しません。"
+  "public_notice": "この公開PWAはREAD-ONLY可視化層です。HC1 candidateは非Canonicalです。画面表示・compile/runtime Evidenceは実行許可ではなく、未確認・古い・不整合な状態は自動でPASSへ昇格しません。"
 }
