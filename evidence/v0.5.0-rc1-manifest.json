@@ -6,12 +6,15 @@
   "application_parent_commit": "63c20e6dadb58e40160400663f7ea51f556b5d57",
   "source_authority": {
     "repository": "poketaro1930katsu-sys/orz-ea-development",
-    "main_sha": "6c71eb07163550c9ab70ccbcc2db1ffb25063a06",
+    "main_sha": "04d80a85d9fb1b5660bee3c9a5f8a9f5b6c9c9eb",
     "canonical_version": "0.3.1",
     "canonical_source_sha256": "56C7F675756E8C234C8E75845D8D7CD2F1D1F6AD35A4A58DFD2F0480842F3DAF",
     "formal_strategy_proof": "GP014A",
     "next_gate": "GP014B",
-    "gp014b_runtime_authorized": false
+    "gp014b_runtime_authorized": false,
+    "implementation_candidate": "POST_V031_HUMAN_CONFIRMED_HC1",
+    "candidate_source_sha256": "5DAA717402C99D8E224D4E0D7B6A506E3C658E88E80AFB157D9C8651113B1579",
+    "candidate_canonical_promoted": false
   },
   "prior_ci": {
     "run_id": 34621478223,
@@ -43,8 +46,8 @@
     },
     {
       "path": "public-status.json",
-      "size": 2829,
-      "sha256": "5E2E638864AE8AE65D75A1DC62BF2D46C5F459314DB76C715AF777AEDEEE237D"
+      "size": 3547,
+      "sha256": "B4164E11667605456A75620A1F3B0BA65865F0368118822FB20C0D5201D64E99"
     },
     {
       "path": "sw.js",
@@ -72,5 +75,5 @@
       "sha256": "18808E4A22B29B0076D78BD08165583281AEB987AE0C46FD87E39920739EB7DA"
     }
   ],
-  "note": "SHA256 manifest binds the release-candidate application files. The manifest intentionally does not hash itself. Production main merge/deployment remains a separate Human Decision."
+  "note": "SHA256 manifest binds the release-candidate application files. The manifest intentionally does not hash itself. Source authority is reconciled to the latest repository evidence; the HC1 candidate remains non-Canonical. Production main merge/deployment remains a separate Human Decision."
 }
