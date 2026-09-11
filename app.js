@@ -167,11 +167,14 @@
   function enterFailClosed(reason) {
     state=null;
     document.body.classList.add('fail-closed');
+    document.querySelectorAll('[data-release]').forEach(el=>el.textContent='UNKNOWN');
     setBanner('error','STATUS UNKNOWN — FAIL-CLOSED','公開Evidenceを検証できません');
     text('heroHealth','Evidence取得失敗 — 未確認をPASS扱いしません');
     const unknownIds=['canonicalVersion','strategyProof','nextGate','canonicalMetric','proofMetric','planningMetric','freshnessMetric',
-      'proofMeta','planningMeta','freshnessMeta','sourceRepo','sourceMainSha','canonicalSha','evidenceCanonical','evidenceStrategyProof','sourceObserved'];
+      'proofMeta','planningMeta','freshnessMeta','gp014bRuntime','sourceImplementation','nextVersionLabel','evidenceResult',
+      'sourceRepo','sourceMainSha','canonicalSha','evidenceCanonical','evidenceStrategyProof','sourceObserved'];
     unknownIds.forEach(id=>text(id,'UNKNOWN'));
+    if ($('sourceObserved')) $('sourceObserved').dateTime='';
     text('canonicalMeta','Repository Evidence 未確認');
     text('nextActionTitle','STOP / VERIFY');
     text('nextActionText','公開状態を検証できないため、次工程へは進みません。');
