@@ -53,7 +53,9 @@
   function freshness(iso) {
     const t = Date.parse(iso);
     if (!Number.isFinite(t)) return {label:'UNKNOWN', detail:'時刻を解釈できません', level:'error'};
-    const hours = Math.max(0,(Date.now()-t)/36e5);
+    const ageMs = Date.now()-t;
+    if (ageMs < -10*60*1000) return {label:'FUTURE', detail:'Source時刻が現在時刻より10分超先です — 正常なSnapshotとはみなしません', level:'error'};
+    const hours = Math.max(0,ageMs/36e5);
     if (hours <= 24) return {label:'FRESH', detail:`Source更新から約${Math.floor(hours)}時間`, level:'ready'};
     if (hours <= 72) return {label:'AGING', detail:`Source更新から約${Math.floor(hours)}時間`, level:'warning'};
     return {label:'STALE', detail:`Source更新から約${Math.floor(hours)}時間 — 最新状態とはみなしません`, level:'error'};
@@ -66,14 +68,17 @@
   }
 
   function render(data) {
+    const f=freshness(data.source.main_commit_at_jst);
+    if (f.level === 'error') {
+      enterFailClosed(`SOURCE_SNAPSHOT_${f.label}: ${f.detail}`);
+      return;
+    }
+
     state=data;
     document.body.classList.remove('fail-closed');
     document.querySelectorAll('[data-release]').forEach(el=>el.textContent=data.release_channel);
 
-    const f=freshness(data.source.main_commit_at_jst);
-    const statusGood = f.level !== 'error';
-
-    text('heroHealth', statusGood ? 'Repository Evidence 読込済み' : '公開Snapshotが古い / 要確認');
+    text('heroHealth', f.level === 'warning' ? 'Repository Evidence 読込済み / Snapshot aging' : 'Repository Evidence 読込済み');
     text('canonicalVersion', `v${data.canonical.version}`);
     text('strategyProof', `${data.strategy_track.last_formal_proof} / ${data.strategy_track.last_formal_result}`);
     text('nextGate', `${data.strategy_track.next_gate} / ${data.strategy_track.status}`);
@@ -85,10 +90,8 @@
     text('planningMeta', data.implementation_gate.status);
     text('freshnessMetric', f.label);
     text('freshnessMeta', f.detail);
-
     text('nextActionTitle', data.strategy_track.next_gate);
     text('nextActionText', data.strategy_track.next_gate_note);
-
     text('strategyLine', `${data.strategy_track.development_line} / ${data.strategy_track.last_formal_proof}`);
     text('strategySummary', data.strategy_track.summary);
     fillList('confirmedList', data.strategy_track.confirmed || []);
@@ -96,7 +99,6 @@
     text('gp014bRuntime', data.strategy_track.runtime_authorized ? '許可' : '未許可');
     text('sourceImplementation', data.implementation_gate.source_implementation_authorized ? '許可' : '未許可');
     text('nextVersionLabel', data.implementation_gate.next_version_label);
-
     text('evidenceResult', `${data.strategy_track.last_formal_proof} / ${data.strategy_track.last_formal_result}`);
     text('sourceRepo', data.source.repository);
     text('sourceMainSha', data.source.main_sha);
@@ -106,17 +108,14 @@
     text('sourceObserved', data.source.main_commit_at_jst);
     $('sourceObserved').dateTime=data.source.main_commit_at_jst;
     text('publicNotice', data.public_notice);
-
     text('performanceTitle', data.performance.published ? '公開検証成績' : '検証済み公開成績は未掲載');
     text('performanceText', data.performance.message);
     text('performanceStatus', data.performance.status);
-
     renderAi('next');
 
-    const bannerLevel = f.level === 'error' ? 'warning' : f.level;
     setBanner(
-      bannerLevel,
-      f.level === 'error' ? 'Repository Evidenceは読めましたがSnapshot鮮度に注意' : 'Repository Evidence 読込完了',
+      f.level,
+      f.level === 'warning' ? 'Repository Evidence 読込完了 / Snapshot aging' : 'Repository Evidence 読込完了',
       `${data.release_channel} / ${f.label}`
     );
   }
@@ -140,22 +139,10 @@
       return;
     }
     const answers={
-      next:{
-        h:`次のGateは ${state.strategy_track.next_gate}`,
-        a:state.strategy_track.next_gate_note
-      },
-      why:{
-        h:'止まっているのは不具合ではなく安全Gate',
-        a:`${state.strategy_track.next_gate} runtime と Source implementation は未許可です。Evidenceが揃っても、実行権限や本番判断は別のHuman Decisionです。`
-      },
-      safe:{
-        h:'安全境界は変更されていません',
-        a:'FAIL-CLOSED、リアルマネー禁止、Live Trade Control未搭載、Canonical/Frozen自動変更禁止。本アプリ自体は注文を送信できません。'
-      },
-      evidence:{
-        h:`Authorityは ${state.source.repository}`,
-        a:`Source main ${shortSha(state.source.main_sha)} と Canonical v${state.canonical.version} / SHA256 ${shortSha(state.canonical.source_sha256)} を公開Snapshotの根拠として表示しています。`
-      }
+      next:{h:`次のGateは ${state.strategy_track.next_gate}`,a:state.strategy_track.next_gate_note},
+      why:{h:'止まっているのは不具合ではなく安全Gate',a:`${state.strategy_track.next_gate} runtime と Source implementation は未許可です。Evidenceが揃っても、実行権限や本番判断は別のHuman Decisionです。`},
+      safe:{h:'安全境界は変更されていません',a:'FAIL-CLOSED、リアルマネー禁止、Live Trade Control未搭載、Canonical/Frozen自動変更禁止。本アプリ自体は注文を送信できません。'},
+      evidence:{h:`Authorityは ${state.source.repository}`,a:`Source main ${shortSha(state.source.main_sha)} と Canonical v${state.canonical.version} / SHA256 ${shortSha(state.canonical.source_sha256)} を公開Snapshotの根拠として表示しています。`}
     };
     const out=answers[question] || answers.next;
     text('aiHeadline',out.h); text('aiAnswer',out.a);
@@ -223,11 +210,9 @@
       $('showcaseButton').textContent=on?'公開表示 ON':'公開表示';
     });
     window.addEventListener('hashchange',()=>activateTab(location.hash.slice(1),false));
-
     const standalone=window.matchMedia?.('(display-mode: standalone)').matches || window.navigator.standalone;
     const iOS=/iPhone|iPad|iPod/.test(navigator.userAgent);
     if(iOS && !standalone) $('installHelp').hidden=false;
-
     if('serviceWorker' in navigator && location.protocol.startsWith('http')) {
       navigator.serviceWorker.register('./sw.js').catch(err=>console.warn('service worker',err));
     }
