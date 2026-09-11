@@ -63,6 +63,7 @@ jobs:
           html=Path('index.html').read_text(encoding='utf-8')
           js=Path('app.js').read_text(encoding='utf-8')
           css=Path('styles.css').read_text(encoding='utf-8')
+          status=Path('public-status.json').read_text(encoding='utf-8')
           for tab in ['command','strategy','evidence','performance','ai']:
               assert f'data-tab="{tab}"' in html, tab
               assert f'data-view="{tab}"' in html, tab
@@ -74,7 +75,7 @@ jobs:
               'KOMEI READ-ONLY NAVIGATOR',
               'UNVERIFIED'
           ]:
-              assert required in (html+js), required
+              assert required in (html+js+status), required
           assert "VALID_TABS" in js
           assert "validateStatus" in js
           assert "enterFailClosed" in js
