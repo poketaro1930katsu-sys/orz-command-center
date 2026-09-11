@@ -1,25 +1,64 @@
 {
   "project": "ORZ_EA",
-  "schema_version": "public-0.1",
-  "release_channel": "v0.4.3",
-  "repository_evidence": {
-    "latest_proof": "GP014A",
-    "result": "PASS",
+  "schema_version": "public-0.2",
+  "release_channel": "v0.5.0-rc1",
+  "source": {
+    "repository": "poketaro1930katsu-sys/orz-ea-development",
+    "branch": "main",
+    "main_sha": "6c71eb07163550c9ab70ccbcc2db1ffb25063a06",
+    "main_commit_at_jst": "2026-09-12T00:40:36+09:00",
     "authority": "REPOSITORY_EVIDENCE"
   },
-  "working_context": {
-    "latest_proof": "GP014A",
-    "result": "PASS",
-    "authority": "WORKING_CONTEXT_RECONCILED",
-    "reconciled": true
+  "canonical": {
+    "version": "0.3.1",
+    "property_version": "3.01",
+    "source_sha256": "56C7F675756E8C234C8E75845D8D7CD2F1D1F6AD35A4A58DFD2F0480842F3DAF",
+    "promotion_status": "CANONICAL_PROMOTED",
+    "previous_version": "0.3.0",
+    "previous_preserved": true
   },
-  "next_action": "GP014B_PENDING_SEPARATE_AUTHORIZATION",
-  "sync_state": "SYNCED_OR_REPOSITORY_AHEAD",
+  "strategy_track": {
+    "development_line": "S2",
+    "last_formal_proof": "GP014A",
+    "last_formal_result": "PASS",
+    "status": "PENDING_SEPARATE_AUTHORIZATION",
+    "next_gate": "GP014B",
+    "runtime_authorized": false,
+    "next_gate_note": "GP014BはPENDINGです。Repository Evidenceの更新やCanonical v0.3.1への昇格は、GP014B runtime・取引・実資金の許可を意味しません。",
+    "summary": "GP014Aは正式Evidenceとして維持され、GP014Bは準備・確認段階です。Strategy runtimeは未許可のままです。",
+    "confirmed": [
+      "GP014A / PASS のRepository Evidence",
+      "Canonical v0.3.1 のpromotion record",
+      "Post-V031のEvidence-only planning gate"
+    ],
+    "not_authorized": [
+      "GP014B runtime",
+      "Live trading / real-money execution",
+      "自動WAIT→ENTRY / SKIP / CONTINUE",
+      "未回収の戦略ルール・閾値・Version labelの推測実装"
+    ]
+  },
+  "implementation_gate": {
+    "name": "POST_V031_HUMAN_CONFIRMED_PLUMBING_GATE",
+    "status": "EVIDENCE_BOUNDARY_LOCKED",
+    "status_short": "LOCKED",
+    "source_implementation_authorized": false,
+    "next_version_label": "UNRESOLVED_DO_NOT_INFER",
+    "allowed_scope_summary": "Evidence-preserving state/schema/logger/observability と human-confirmed / manually supplied / TEST_PARAMETER plumbing の境界定義のみ。"
+  },
+  "performance": {
+    "published": false,
+    "status": "UNVERIFIED_NOT_PUBLISHED",
+    "message": "公開可能な検証済みPerformance datasetがこのCOMMAND CENTERにはまだありません。PF・DD・勝率・収益率を推測値や過去の断片で埋めないため、数値は非表示です。"
+  },
   "safety": {
     "fail_closed": true,
     "real_money": "PROHIBITED",
     "live_trade_control": "NOT_PRESENT_IN_COMMAND_CENTER",
-    "canonical_frozen_auto_edit": "BLOCKED"
+    "canonical_frozen_auto_edit": "BLOCKED",
+    "command_center_trade_api": "NONE",
+    "private_evidence_exposed": false,
+    "credentials_exposed": false
   },
-  "public_notice": "GP014AはRepository Evidenceと照合済みです。GP014BはPENDINGであり、この公開状態は実行許可を与えません。"
+  "public_notice": "この公開PWAはREAD-ONLY可視化層です。画面表示は実行許可ではありません。未確認・古い・不整合な状態は自動でPASSへ昇格しません。"
 }

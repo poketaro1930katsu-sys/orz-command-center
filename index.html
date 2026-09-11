@@ -4,55 +4,254 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#070A10">
+<meta name="color-scheme" content="dark">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="ORZ">
+<meta name="description" content="ORZ EA 開発・検証の公開READ-ONLYコマンドセンター">
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" href="./icon.svg">
 <link rel="apple-touch-icon" href="./apple-touch-icon.png">
-<title>ORZ COMMAND CENTER v0.4.3</title>
-<style>
-:root{--bg:#070a10;--panel:#111722;--line:#263249;--text:#f5f7fb;--muted:#aeb8c6;--blue:#73b8ff;--violet:#a493ff;--green:#3dde98;--amber:#ffc969;--red:#ff6f7d}
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#070a10;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif}
-body{background:radial-gradient(circle at 85% -5%,rgba(128,113,255,.18),transparent 32%),linear-gradient(180deg,#070a10,#0b1018 48%,#070a10)}
-.app{max-width:900px;margin:auto;padding:calc(16px + env(safe-area-inset-top)) 14px calc(88px + env(safe-area-inset-bottom))}
-header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:4px 2px 16px}.brand{display:flex;align-items:center;gap:11px}.mark{width:42px;height:42px;border:1px solid #30405b;border-radius:13px;display:grid;place-items:center;font-weight:900;font-size:11px;background:#0d1420}.brand h1{margin:0;font-size:17px}.brand p{margin:3px 0 0;font-size:10px;color:var(--muted)}
-button{background:#101722;color:var(--text);border:1px solid #34445f;border-radius:999px;padding:8px 11px;font-weight:800;font-size:10px}.hero,.card{background:rgba(17,23,34,.96);border:1px solid var(--line);box-shadow:0 15px 38px rgba(0,0,0,.22)}.hero{border-radius:24px;padding:19px;overflow:hidden}.eyebrow,.label{font-size:10px;font-weight:800;letter-spacing:.1em;color:var(--muted)}.health{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:800;margin-top:12px}.dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 14px var(--green)}.version{font-size:36px;font-weight:900;margin:8px 0 16px}.version span{color:var(--blue)}
-.hero-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.mini{font-size:10px;color:var(--muted);line-height:1.45}.mini b{font-size:11px;color:var(--text)}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:11px}.card{border-radius:18px;padding:14px}.value{font-size:23px;font-weight:900;margin-top:7px}.blue{color:var(--blue)}.green{color:var(--green)}.violet{color:var(--violet)}.amber{color:var(--amber)}.red{color:var(--red)}
-.section{margin-top:14px}.section-title{font-size:11px;font-weight:900;letter-spacing:.08em;color:#c4cfdb;margin:0 0 8px 4px}.row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}.row:last-child{border:0}.pill{font-size:10px;font-weight:900;padding:5px 8px;border-radius:999px;border:1px solid currentColor;white-space:nowrap}.next{background:linear-gradient(135deg,rgba(115,184,255,.10),rgba(164,147,255,.08))}.next .value{font-size:25px}.notice{border-color:#285748;background:linear-gradient(135deg,rgba(61,222,152,.08),rgba(17,23,34,.96))}.timeline{position:relative;padding-left:20px}.timeline:before{content:"";position:absolute;left:6px;top:9px;bottom:9px;width:2px;background:var(--line)}.step{position:relative;padding:8px 0 12px}.step:before{content:"";position:absolute;left:-18px;top:13px;width:10px;height:10px;border-radius:50%;background:#39475d}.step.done:before{background:var(--green)}.step.current:before{background:var(--amber)}.step b{font-size:12px}.step div{font-size:10px;color:var(--muted);margin-top:3px}body.showcase .private{filter:blur(8px);pointer-events:none}nav{position:fixed;z-index:10;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(5,1fr);background:rgba(7,10,16,.94);backdrop-filter:blur(18px);border-top:1px solid var(--line);padding:7px 8px calc(7px + env(safe-area-inset-bottom))}.tab{text-align:center;color:var(--muted);font-size:9px}.tab i{display:block;font-style:normal;font-size:16px;margin-bottom:2px}.tab.active{color:var(--blue)}.install{display:none;margin-top:12px}.install.show{display:block}@media(min-width:760px){.grid{grid-template-columns:repeat(4,1fr)}}
-</style>
+<link rel="stylesheet" href="./styles.css">
+<title>ORZ COMMAND CENTER v0.5.0</title>
 </head>
 <body>
-<div class="app">
-<header><div class="brand"><div class="mark">ORZ</div><div><h1>ORZ COMMAND CENTER</h1><p>AI自動売買戦略 開発・検証システム / Public v0.4.3</p></div></div><button id="showcase">公開表示</button></header>
-<section class="hero">
- <div class="eyebrow">開発状況 / ミッションコントロール</div>
- <div class="health"><span class="dot"></span>GP014A Evidence整合済み</div>
- <div class="version">S2 <span>v0.3.0</span></div>
- <div class="hero-grid">
-  <div class="mini">正式Repository Evidence<br><b class="green">GP014A / PASS</b></div>
-  <div class="mini">Working Context<br><b class="green">GP014A / PASS（照合済み）</b></div>
-  <div class="mini">安全モード<br><b>FAIL-CLOSED</b></div>
- </div>
-</section>
-<div class="grid">
- <div class="card"><div class="label">現在の開発状態</div><div class="value blue">S2 v0.3.0</div><div class="mini">現在の開発系統</div></div>
- <div class="card"><div class="label">正式Repository Evidence</div><div class="value green">GP014A</div><div class="mini">正式結果：PASS</div></div>
- <div class="card"><div class="label">Working Context</div><div class="value green">GP014A</div><div class="mini">PASS（Repository Evidenceと照合済み）</div></div>
- <div class="card"><div class="label">同期状態</div><div class="value green">SYNCED</div><div class="mini">Repository EvidenceとWorking Contextは整合済み</div></div>
+<a class="skip-link" href="#main">本文へ</a>
+
+<div class="app-shell">
+  <header class="topbar">
+    <div class="brand">
+      <div class="mark" aria-hidden="true">ORZ</div>
+      <div>
+        <h1>ORZ COMMAND CENTER</h1>
+        <p>AI自動売買戦略 開発・検証システム / Public <span data-release>v0.5.0</span></p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="chip-button" id="refreshButton" type="button" aria-label="最新の公開状態を再読込">↻ 更新</button>
+      <button class="chip-button" id="showcaseButton" type="button" aria-pressed="false">公開表示</button>
+    </div>
+  </header>
+
+  <div id="systemBanner" class="system-banner loading" role="status" aria-live="polite">
+    <span class="status-dot"></span>
+    <strong id="systemBannerTitle">公開Evidenceを確認中</strong>
+    <span id="systemBannerMeta">READ-ONLY / FAIL-CLOSED</span>
+  </div>
+
+  <main id="main" tabindex="-1">
+    <section class="view active" data-view="command" aria-labelledby="tab-command">
+      <section class="hero panel">
+        <div class="eyebrow">開発状況 / ミッションコントロール</div>
+        <div class="health"><span class="status-dot"></span><span id="heroHealth">状態確認中</span></div>
+        <div class="version">Canonical <span id="canonicalVersion">—</span></div>
+        <div class="hero-grid">
+          <div class="mini">戦略Evidence<br><b id="strategyProof">—</b></div>
+          <div class="mini">次の戦略Gate<br><b id="nextGate">—</b></div>
+          <div class="mini">安全モード<br><b>FAIL-CLOSED</b></div>
+        </div>
+      </section>
+
+      <div class="metric-grid">
+        <article class="panel metric-card">
+          <div class="label">現在Canonical</div>
+          <div class="metric blue" id="canonicalMetric">—</div>
+          <div class="mini" id="canonicalMeta">Repository確認待ち</div>
+        </article>
+        <article class="panel metric-card">
+          <div class="label">正式Strategy Evidence</div>
+          <div class="metric green" id="proofMetric">—</div>
+          <div class="mini" id="proofMeta">正式結果を確認中</div>
+        </article>
+        <article class="panel metric-card">
+          <div class="label">Post-V031 Gate</div>
+          <div class="metric violet" id="planningMetric">—</div>
+          <div class="mini" id="planningMeta">境界を確認中</div>
+        </article>
+        <article class="panel metric-card">
+          <div class="label">公開Snapshot</div>
+          <div class="metric" id="freshnessMetric">—</div>
+          <div class="mini" id="freshnessMeta">時刻を確認中</div>
+        </article>
+      </div>
+
+      <section class="panel next-card">
+        <div class="label">次の一手</div>
+        <div class="next-title"><span id="nextActionTitle">Evidence確認中</span><span class="blue">→</span></div>
+        <p class="mini" id="nextActionText">未確認状態では次工程へ昇格しません。</p>
+      </section>
+
+      <section class="section">
+        <h2>安全管理</h2>
+        <div class="panel list-card">
+          <div class="row"><span>Fail-Closed</span><span class="pill green">有効</span></div>
+          <div class="row"><span>リアルマネー</span><span class="pill red">禁止</span></div>
+          <div class="row"><span>ライブ取引操作</span><span class="pill red">未搭載</span></div>
+          <div class="row"><span>Canonical / Frozen 自動変更</span><span class="pill red">禁止</span></div>
+          <div class="row"><span>本アプリからの注文送信</span><span class="pill red">不可</span></div>
+        </div>
+      </section>
+    </section>
+
+    <section class="view" data-view="strategy" aria-labelledby="tab-strategy" hidden>
+      <div class="page-heading">
+        <div class="eyebrow">STRATEGY</div>
+        <h2>戦略</h2>
+        <p>ORZ研究・実装の「確認済み」と「未許可」を混ぜずに表示します。</p>
+      </div>
+
+      <section class="panel focus-card">
+        <div class="label">Strategy Track</div>
+        <div class="big-value" id="strategyLine">—</div>
+        <p id="strategySummary">公開Evidenceを読み込み中です。</p>
+      </section>
+
+      <div class="two-col">
+        <section class="panel">
+          <h3>CONFIRMED</h3>
+          <ul class="check-list" id="confirmedList"></ul>
+        </section>
+        <section class="panel">
+          <h3>NOT AUTHORIZED</h3>
+          <ul class="stop-list" id="blockedList"></ul>
+        </section>
+      </div>
+
+      <section class="panel">
+        <div class="row"><span>GP014B runtime</span><span class="pill red" id="gp014bRuntime">未許可</span></div>
+        <div class="row"><span>Source implementation</span><span class="pill amber" id="sourceImplementation">未許可</span></div>
+        <div class="row"><span>次Version label</span><span class="pill amber" id="nextVersionLabel">UNKNOWN</span></div>
+      </section>
+    </section>
+
+    <section class="view" data-view="evidence" aria-labelledby="tab-evidence" hidden>
+      <div class="page-heading">
+        <div class="eyebrow">EVIDENCE AUTHORITY</div>
+        <h2>証拠</h2>
+        <p>画面表示ではなく、Repository由来の公開可能なEvidenceだけを参照します。</p>
+      </div>
+
+      <section class="panel evidence-hero">
+        <div>
+          <div class="label">Authority</div>
+          <div class="big-value green">REPOSITORY EVIDENCE</div>
+        </div>
+        <span class="pill green" id="evidenceResult">CHECKING</span>
+      </section>
+
+      <section class="panel detail-panel">
+        <div class="row stack-mobile">
+          <span>Source Repository</span>
+          <code id="sourceRepo">—</code>
+        </div>
+        <div class="row stack-mobile detail">
+          <span>Source main SHA</span>
+          <code id="sourceMainSha">—</code>
+        </div>
+        <div class="row stack-mobile detail">
+          <span>Canonical source SHA256</span>
+          <code id="canonicalSha">—</code>
+        </div>
+        <div class="row stack-mobile">
+          <span>Canonical version</span>
+          <span class="pill blue" id="evidenceCanonical">—</span>
+        </div>
+        <div class="row stack-mobile">
+          <span>Last formal strategy proof</span>
+          <span class="pill green" id="evidenceStrategyProof">—</span>
+        </div>
+        <div class="row stack-mobile">
+          <span>Source observed</span>
+          <time id="sourceObserved">—</time>
+        </div>
+      </section>
+
+      <section class="panel notice-card">
+        <h3>Evidenceルール</h3>
+        <p id="publicNotice">未確認状態をPASSへ昇格しません。</p>
+      </section>
+    </section>
+
+    <section class="view" data-view="performance" aria-labelledby="tab-performance" hidden>
+      <div class="page-heading">
+        <div class="eyebrow">PERFORMANCE</div>
+        <h2>成績</h2>
+        <p>利益を演出せず、検証済みデータだけを掲載します。</p>
+      </div>
+
+      <section class="panel empty-state" id="performancePanel">
+        <div class="empty-icon" aria-hidden="true">↗</div>
+        <h3 id="performanceTitle">検証済み成績を確認中</h3>
+        <p id="performanceText">公開Evidenceを読み込み中です。</p>
+        <div class="pill amber" id="performanceStatus">CHECKING</div>
+      </section>
+
+      <section class="panel">
+        <h3>掲載ルール</h3>
+        <ul class="plain-list">
+          <li>Backtest / Forward / Demo / Live を混同しない。</li>
+          <li>PF・DD・勝率・収益率はEvidenceがある場合だけ表示する。</li>
+          <li>未公開・未検証値は 0 や推定値で埋めない。</li>
+          <li>リアルマネー移行は本アプリから承認しない。</li>
+        </ul>
+      </section>
+    </section>
+
+    <section class="view" data-view="ai" aria-labelledby="tab-ai" hidden>
+      <div class="page-heading">
+        <div class="eyebrow">AI NAVIGATOR</div>
+        <h2>AI</h2>
+        <p>外部APIや秘密鍵を使わない、Evidenceベースのローカル案内です。</p>
+      </div>
+
+      <section class="panel ai-card">
+        <div class="ai-orb" aria-hidden="true">✦</div>
+        <div>
+          <div class="label">KOMEI READ-ONLY NAVIGATOR</div>
+          <h3 id="aiHeadline">公開Evidenceを読み込み中</h3>
+          <p id="aiAnswer">状態取得後に、いま何をすべきかをEvidenceから案内します。</p>
+        </div>
+      </section>
+
+      <div class="quick-actions" role="group" aria-label="AI案内">
+        <button type="button" data-ai-question="next">今やるべきこと</button>
+        <button type="button" data-ai-question="why">なぜ止まっている？</button>
+        <button type="button" data-ai-question="safe">安全境界</button>
+        <button type="button" data-ai-question="evidence">Evidenceは何？</button>
+      </div>
+
+      <section class="panel">
+        <div class="row"><span>外部AI API</span><span class="pill green">不要</span></div>
+        <div class="row"><span>秘密鍵 / Token</span><span class="pill green">保存しない</span></div>
+        <div class="row"><span>取引権限</span><span class="pill red">なし</span></div>
+        <div class="row"><span>Decision変更</span><span class="pill red">不可</span></div>
+      </section>
+    </section>
+
+    <section class="panel install-help" id="installHelp" hidden>
+      <div class="label">iPhoneへ追加</div>
+      <strong>Safariの共有 →「ホーム画面に追加」</strong>
+      <p>HTTPS公開後、ORZ専用PWAとして起動できます。</p>
+    </section>
+
+    <footer class="footer">
+      <p>READ-ONLY PUBLIC VIEW • Evidence AuthorityはRepository側にあります。</p>
+      <p id="footerBuild">ORZ COMMAND CENTER v0.5.0</p>
+    </footer>
+  </main>
 </div>
-<div class="section"><div class="card next"><div class="label">次の一手</div><div class="value">GP014B <span class="blue">→</span></div><div class="mini">PENDING。GP014Aの照合完了だけではGP014Bの実行許可になりません。別途Human Authorizationが必要です。</div></div></div>
-<div class="section"><div class="section-title">Evidence Authority</div><div class="card notice"><div class="row"><span>正式Repository Evidence</span><span class="pill green">GP014A / PASS</span></div><div class="row"><span>Working Context</span><span class="pill green">GP014A / 照合済み</span></div><div class="row"><span>同期状態</span><span class="pill green">SYNCED</span></div><div class="row"><span>判定</span><span class="pill green">Repository整合済み</span></div></div></div>
-<div class="section"><div class="section-title">安全管理</div><div class="card"><div class="row"><span>Fail-Closed</span><span class="pill green">有効</span></div><div class="row"><span>リアルマネー</span><span class="pill red">禁止</span></div><div class="row"><span>ライブ取引操作</span><span class="pill red">未搭載</span></div><div class="row"><span>Canonical / Frozen 自動変更</span><span class="pill red">禁止</span></div></div></div>
-<div class="section"><div class="section-title">開発履歴</div><div class="card"><div class="timeline"><div class="step done"><b>GP001–GP012</b><div>実行安全ゲートを正式通過。</div></div><div class="step done"><b>GP013A–GP013B / Repository Evidence</b><div>GP013 FORMAL PASSまでRepository Evidenceとして確認済み。</div></div><div class="step done"><b>GP014A / Repository Evidence</b><div>Technical PASS・Final Archival Checkpoint FROZENを照合済み。</div></div><div class="step current"><b>GP014B / PENDING</b><div>別途Human Authorizationが必要。現在は実行許可なし。</div></div></div></div></div>
-<div class="card install" id="installHelp"><div class="label">iPhoneへ追加</div><div style="font-weight:800;margin-top:7px">Safariの共有 →「ホーム画面に追加」</div><div class="mini" style="margin-top:5px">HTTPS公開後、ORZ専用アプリとしてホーム画面から起動できます。</div></div>
-<div class="section"><div class="card"><div class="label">公開版について</div><div class="mini" style="margin-top:7px">この公開版にはEA本体・口座情報・機密Evidence・秘密情報を含めません。公開画面は表示層であり、Evidence Authorityでも実行許可チャネルでもありません。</div></div></div>
-</div>
-<nav><div class="tab active"><i>◉</i>司令塔</div><div class="tab"><i>⌁</i>戦略</div><div class="tab"><i>◇</i>証拠</div><div class="tab"><i>↗</i>成績</div><div class="tab"><i>✦</i>AI</div></nav>
-<script>
-document.getElementById('showcase').onclick=()=>{document.body.classList.toggle('showcase');document.getElementById('showcase').textContent=document.body.classList.contains('showcase')?'公開表示 ON':'公開表示';};
-if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('./sw.js');
-if(/iPhone|iPad|iPod/.test(navigator.userAgent) && !window.navigator.standalone) document.getElementById('installHelp').classList.add('show');
-</script>
+
+<nav class="bottom-nav" aria-label="メインナビゲーション">
+  <button id="tab-command" class="tab active" type="button" data-tab="command" aria-selected="true"><span>◉</span>司令塔</button>
+  <button id="tab-strategy" class="tab" type="button" data-tab="strategy" aria-selected="false"><span>⌁</span>戦略</button>
+  <button id="tab-evidence" class="tab" type="button" data-tab="evidence" aria-selected="false"><span>◇</span>証拠</button>
+  <button id="tab-performance" class="tab" type="button" data-tab="performance" aria-selected="false"><span>↗</span>成績</button>
+  <button id="tab-ai" class="tab" type="button" data-tab="ai" aria-selected="false"><span>✦</span>AI</button>
+</nav>
+
+<noscript>
+  <div class="noscript">このアプリはJavaScriptで公開Evidenceを検証して表示します。JavaScriptを有効にしてください。</div>
+</noscript>
+<script src="./app.js" defer></script>
 </body>
 </html>
