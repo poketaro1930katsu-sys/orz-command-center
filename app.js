@@ -22,7 +22,9 @@
   function validateStatus(data) {
     required(data,'schema_version');
     required(data,'release_channel');
+    required(data,'snapshot_generated_at_jst');
     required(data,'source.repository');
+    required(data,'source.branch');
     required(data,'source.main_sha');
     required(data,'source.main_commit_at_jst');
     required(data,'canonical.version');
@@ -35,16 +37,30 @@
     required(data,'implementation_gate.status');
     required(data,'implementation_gate.source_implementation_authorized');
     required(data,'implementation_gate.next_version_label');
+    required(data,'performance.published');
     required(data,'performance.status');
     required(data,'safety.fail_closed');
     required(data,'safety.real_money');
     required(data,'safety.live_trade_control');
     required(data,'safety.canonical_frozen_auto_edit');
+    required(data,'safety.command_center_trade_api');
+    required(data,'safety.private_evidence_exposed');
+    required(data,'safety.credentials_exposed');
 
+    if (data.schema_version !== 'public-0.2') throw new Error('schema_version_invalid');
+    if (data.release_channel !== 'v0.5.0-rc1') throw new Error('release_channel_invalid');
+    if (data.source.repository !== 'poketaro1930katsu-sys/orz-ea-development') throw new Error('source_repository_invalid');
+    if (data.source.branch !== 'main') throw new Error('source_branch_invalid');
+    if (!/^[0-9a-f]{40}$/.test(data.source.main_sha)) throw new Error('source_main_sha_invalid');
+    if (!/^[0-9A-F]{64}$/.test(data.canonical.source_sha256)) throw new Error('canonical_sha256_invalid');
+    if (data.performance.published !== false || data.performance.status !== 'UNVERIFIED_NOT_PUBLISHED') throw new Error('performance_publication_boundary_invalid');
     if (data.safety.fail_closed !== true) throw new Error('fail_closed_must_be_true');
     if (data.safety.real_money !== 'PROHIBITED') throw new Error('real_money_boundary_invalid');
     if (data.safety.live_trade_control !== 'NOT_PRESENT_IN_COMMAND_CENTER') throw new Error('live_trade_boundary_invalid');
     if (data.safety.canonical_frozen_auto_edit !== 'BLOCKED') throw new Error('canonical_boundary_invalid');
+    if (data.safety.command_center_trade_api !== 'NONE') throw new Error('trade_api_boundary_invalid');
+    if (data.safety.private_evidence_exposed !== false) throw new Error('private_evidence_boundary_invalid');
+    if (data.safety.credentials_exposed !== false) throw new Error('credentials_boundary_invalid');
     if (data.strategy_track.runtime_authorized !== false) throw new Error('strategy_runtime_must_be_false');
     if (data.implementation_gate.source_implementation_authorized !== false) throw new Error('source_implementation_must_be_false');
     return data;
@@ -52,13 +68,13 @@
 
   function freshness(iso) {
     const t = Date.parse(iso);
-    if (!Number.isFinite(t)) return {label:'UNKNOWN', detail:'時刻を解釈できません', level:'error'};
+    if (!Number.isFinite(t)) return {label:'UNKNOWN', detail:'Snapshot検証時刻を解釈できません', level:'error'};
     const ageMs = Date.now()-t;
-    if (ageMs < -10*60*1000) return {label:'FUTURE', detail:'Source時刻が現在時刻より10分超先です — 正常なSnapshotとはみなしません', level:'error'};
+    if (ageMs < -10*60*1000) return {label:'FUTURE', detail:'Snapshot検証時刻が現在時刻より10分超先です — 正常なSnapshotとはみなしません', level:'error'};
     const hours = Math.max(0,ageMs/36e5);
-    if (hours <= 24) return {label:'FRESH', detail:`Source更新から約${Math.floor(hours)}時間`, level:'ready'};
-    if (hours <= 72) return {label:'AGING', detail:`Source更新から約${Math.floor(hours)}時間`, level:'warning'};
-    return {label:'STALE', detail:`Source更新から約${Math.floor(hours)}時間 — 最新状態とはみなしません`, level:'error'};
+    if (hours <= 24) return {label:'FRESH', detail:`Snapshot検証から約${Math.floor(hours)}時間`, level:'ready'};
+    if (hours <= 72) return {label:'AGING', detail:`Snapshot検証から約${Math.floor(hours)}時間`, level:'warning'};
+    return {label:'STALE', detail:`Snapshot検証から約${Math.floor(hours)}時間 — 最新状態とはみなしません`, level:'error'};
   }
 
   function setBanner(level,title,meta) {
@@ -68,9 +84,9 @@
   }
 
   function render(data) {
-    const f=freshness(data.source.main_commit_at_jst);
+    const f=freshness(data.snapshot_generated_at_jst);
     if (f.level === 'error') {
-      enterFailClosed(`SOURCE_SNAPSHOT_${f.label}: ${f.detail}`);
+      enterFailClosed(`PUBLIC_SNAPSHOT_${f.label}: ${f.detail}`);
       return;
     }
 
