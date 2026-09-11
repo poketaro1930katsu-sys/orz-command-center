@@ -1,6 +1,5 @@
 # ORZ COMMAND CENTER
 
-ORZ EA development and verification dashboard.
+Evidence-first, fail-closed public command center for ORZ EA development.
 
-Public app: Evidence-first / Fail-Closed / READ-ONLY.
-Production deployment remains a separate human decision.
+See [README_PUBLIC.md](./README_PUBLIC.md) for the public safety contract and release scope.
