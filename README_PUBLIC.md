@@ -1,25 +1,38 @@
-# ORZ COMMAND CENTER — Public PWA
+# ORZ COMMAND CENTER
 
-Release candidate: `v0.5.0-rc1`
+Public, read-only PWA for ORZ EA development and verification status.
 
-This repository contains only the public-facing READ-ONLY application shell for ORZ development status.
+## Release candidate
+
+`v0.5.0-rc1`
+
+This repository contains only the public-facing application shell and a sanitized `public-status.json` snapshot.
+
+It does **not** contain:
+- EA source code
+- trading credentials or account information
+- private Evidence Packs
+- API keys, tokens, cookies, or secrets
+- live-trade controls
+- real-money execution controls
 
 ## Safety contract
-- Evidence-first / Fail-Closed.
-- Real money: prohibited.
-- Live-trade control: not present.
-- Command-center trade API: none.
-- Canonical / Frozen auto-edit: blocked.
-- GP014B runtime: not authorized.
-- Private Evidence Packs, credentials, secrets, tokens, account data, and EA source are not exposed here.
-- Unverified performance metrics are not published or inferred.
 
-## Evidence freshness
-Visible state is loaded from `public-status.json` using network-only `no-store` fetching. `snapshot_generated_at_jst` records when the sanitized public snapshot was revalidated against the source-of-truth repository. Source commit time is provenance only and is not used as snapshot freshness.
+- Fail-Closed: enforced
+- Real money: prohibited
+- Live trade control: not present
+- Canonical / Frozen auto-edit: blocked
+- `public-status.json`: network-only / `no-store`; stale cached PASS is not accepted
+- Snapshot freshness is evaluated from `snapshot_generated_at_jst`, the last verified public-state reconciliation time
+- Source commit time is provenance only and does not by itself make a freshly revalidated snapshot stale
+- UI state is not an authorization channel
 
-A snapshot older than 72 hours, invalid, or more than 10 minutes future-dated is treated as `STATUS UNKNOWN — FAIL-CLOSED` before PASS values render.
+## App sections
 
-## Public application
-The five public sections are functional: 司令塔 / 戦略 / 証拠 / 成績 / AI. The AI section is a deterministic local Evidence Navigator and does not call an external AI API or store a token.
+- 司令塔: current Canonical, strategy Evidence, next gate, freshness, safety
+- 戦略: confirmed scope vs not-authorized scope
+- 証拠: sanitized Repository Evidence lineage and hashes
+- 成績: verified performance only; otherwise explicitly UNVERIFIED
+- AI: deterministic, local Evidence navigator; no external AI API or secret key
 
 Production deployment is a separate human decision.
