@@ -86,6 +86,24 @@ jobs:
           print('app sections and safety UI valid')
           PY
 
+      - name: Validate stale and future snapshot fail-closed gate
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          js=Path('app.js').read_text(encoding='utf-8')
+          freshness=js.split('function freshness',1)[1].split('function setBanner',1)[0]
+          render=js.split('function render(data)',1)[1].split('function fillList',1)[0]
+          assert "label:'STALE'" in freshness
+          assert "label:'FUTURE'" in freshness
+          assert "ageMs < -10*60*1000" in freshness
+          stale_gate="if (f.level === 'error')"
+          fail_call="enterFailClosed(`SOURCE_SNAPSHOT_${f.label}: ${f.detail}`)"
+          assert stale_gate in render
+          assert fail_call in render
+          assert render.index(stale_gate) < render.index('state=data;')
+          print('stale/future snapshot fail-closed gate valid')
+          PY
+
       - name: Validate service worker freshness policy
         run: |
           python - <<'PY'
