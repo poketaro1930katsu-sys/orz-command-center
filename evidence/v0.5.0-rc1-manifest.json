@@ -4,6 +4,7 @@
   "repository": "poketaro1930katsu-sys/orz-command-center",
   "branch": "app/command-center-v0.5.0-completion-20260912",
   "application_parent_commit": "63c20e6dadb58e40160400663f7ea51f556b5d57",
+  "snapshot_generated_at_jst": "2026-09-12T04:22:06+09:00",
   "source_authority": {
     "repository": "poketaro1930katsu-sys/orz-ea-development",
     "main_sha": "04d80a85d9fb1b5660bee3c9a5f8a9f5b6c9c9eb",
@@ -17,8 +18,8 @@
     "candidate_canonical_promoted": false
   },
   "prior_ci": {
-    "run_id": 34621478223,
-    "run_number": 3,
+    "run_id": 34633571706,
+    "run_number": 10,
     "conclusion": "success"
   },
   "safety": {
@@ -41,13 +42,13 @@
     },
     {
       "path": "app.js",
-      "size": 11925,
-      "sha256": "37DED04D32FD994D02C6EB1FB614215456A77EFDD70A5F6492DF897F0E47150B"
+      "size": 13308,
+      "sha256": "D26E870BD82CD8E5BC0B44595ADDAD10CC2D644D0C29F19EC3045159FCF55DA1"
     },
     {
       "path": "public-status.json",
-      "size": 3547,
-      "sha256": "B4164E11667605456A75620A1F3B0BA65865F0368118822FB20C0D5201D64E99"
+      "size": 3741,
+      "sha256": "80E1C9F269D7DC2541420D18843A0CAC58D2067B1CC622C53665A2F1766E815C"
     },
     {
       "path": "sw.js",
@@ -66,14 +67,14 @@
     },
     {
       "path": "README_PUBLIC.md",
-      "size": 1130,
-      "sha256": "BC168B5BB7373DECC788C5D4D85500CFAE1F8CDFCCCD256D56699BD3C3B6BD74"
+      "size": 1354,
+      "sha256": "CE70919000FC81B4A56FBA80B0C2799D058821BF2D65314A4B9707994232C9FA"
     },
     {
       "path": ".github/workflows/public-pwa-ci.yml",
-      "size": 6615,
-      "sha256": "01967134D0EF80E1C1B7F1337D9EC068DCFB2FEFCB7B05CE9B70A89050EBB9E3"
+      "size": 8250,
+      "sha256": "E50BAD372C86CADF69FE8D8D5EA729A6591216E74A47E4800FA566C8940EC21D"
     }
   ],
-  "note": "SHA256 manifest binds the release-candidate application files. The manifest intentionally does not hash itself. Source authority is reconciled to the latest repository evidence; the HC1 candidate remains non-Canonical. Stale (>72h), invalid, or materially future-dated source snapshots now fail closed before PASS values render. Production main merge/deployment remains a separate Human Decision."
+  "note": "SHA256 manifest binds the release-candidate application files. The manifest intentionally does not hash itself. Source authority was re-read at snapshot generation time and remained on the recorded main SHA; the HC1 candidate remains non-Canonical. Freshness is now based on the verified public snapshot timestamp, while source commit time is provenance only. Stale (>72h), invalid, or materially future-dated public snapshots fail closed before PASS values render. Runtime schema guards reject release/schema/source/safety/performance boundary drift. Production main merge/deployment remains a separate Human Decision."
 }
