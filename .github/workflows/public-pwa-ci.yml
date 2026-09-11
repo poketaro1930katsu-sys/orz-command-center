@@ -105,6 +105,7 @@ jobs:
           js=Path('app.js').read_text(encoding='utf-8')
           freshness=js.split('function freshness',1)[1].split('function setBanner',1)[0]
           render=js.split('function render(data)',1)[1].split('function fillList',1)[0]
+          failclosed=js.split('function enterFailClosed',1)[1].split('async function loadStatus',1)[0]
           assert "label:'STALE'" in freshness
           assert "label:'FUTURE'" in freshness
           assert "ageMs < -10*60*1000" in freshness
@@ -115,7 +116,11 @@ jobs:
           assert stale_gate in render
           assert fail_call in render
           assert render.index(stale_gate) < render.index('state=data;')
-          print('snapshot freshness semantics and fail-closed gate valid')
+          for stale_id in ['gp014bRuntime','sourceImplementation','nextVersionLabel','evidenceResult','sourceRepo','sourceMainSha','canonicalSha','evidenceCanonical','evidenceStrategyProof','sourceObserved']:
+              assert f"'{stale_id}'" in failclosed, stale_id
+          assert "document.querySelectorAll('[data-release]').forEach(el=>el.textContent='UNKNOWN')" in failclosed
+          assert "$('sourceObserved').dateTime=''" in failclosed
+          print('snapshot freshness semantics and fail-closed stale-value clearing valid')
           PY
 
       - name: Validate runtime schema guards
