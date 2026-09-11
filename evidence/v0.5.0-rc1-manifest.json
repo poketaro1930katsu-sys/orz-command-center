@@ -41,8 +41,8 @@
     },
     {
       "path": "app.js",
-      "size": 11818,
-      "sha256": "D6E124CC8E596F1484442B0CA4338E58EB5EF7092F0C8695A5BBE688535FF68A"
+      "size": 11925,
+      "sha256": "37DED04D32FD994D02C6EB1FB614215456A77EFDD70A5F6492DF897F0E47150B"
     },
     {
       "path": "public-status.json",
@@ -71,9 +71,9 @@
     },
     {
       "path": ".github/workflows/public-pwa-ci.yml",
-      "size": 5741,
-      "sha256": "18808E4A22B29B0076D78BD08165583281AEB987AE0C46FD87E39920739EB7DA"
+      "size": 6615,
+      "sha256": "01967134D0EF80E1C1B7F1337D9EC068DCFB2FEFCB7B05CE9B70A89050EBB9E3"
     }
   ],
-  "note": "SHA256 manifest binds the release-candidate application files. The manifest intentionally does not hash itself. Source authority is reconciled to the latest repository evidence; the HC1 candidate remains non-Canonical. Production main merge/deployment remains a separate Human Decision."
+  "note": "SHA256 manifest binds the release-candidate application files. The manifest intentionally does not hash itself. Source authority is reconciled to the latest repository evidence; the HC1 candidate remains non-Canonical. Stale (>72h), invalid, or materially future-dated source snapshots now fail closed before PASS values render. Production main merge/deployment remains a separate Human Decision."
 }
