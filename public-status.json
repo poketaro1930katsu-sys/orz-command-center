@@ -2,6 +2,7 @@
   "project": "ORZ_EA",
   "schema_version": "public-0.2",
   "release_channel": "v0.5.0-rc1",
+  "snapshot_generated_at_jst": "2026-09-12T04:22:06+09:00",
   "source": {
     "repository": "poketaro1930katsu-sys/orz-ea-development",
     "branch": "main",
@@ -71,5 +72,5 @@
     "private_evidence_exposed": false,
     "credentials_exposed": false
   },
-  "public_notice": "この公開PWAはREAD-ONLY可視化層です。HC1 candidateは非Canonicalです。画面表示・compile/runtime Evidenceは実行許可ではなく、未確認・古い・不整合な状態は自動でPASSへ昇格しません。"
+  "public_notice": "この公開PWAはREAD-ONLY可視化層です。HC1 candidateは非Canonicalです。画面表示・compile/runtime Evidenceは実行許可ではなく、未確認・古い・不整合な状態は自動でPASSへ昇格しません。Snapshot freshnessは公開状態を再検証した時刻で判定し、Source commit時刻はprovenanceとして別表示します。"
 }
