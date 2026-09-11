@@ -26,6 +26,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--blue);outline-offse
 .system-banner.warning .status-dot{background:var(--amber);color:var(--amber)}
 .system-banner.error{border-color:#6a3440;background:rgba(91,25,38,.28)}
 .system-banner.error .status-dot{background:var(--red);color:var(--red)}
+body.fail-closed .health .status-dot{background:var(--red);color:var(--red)}
 .panel{background:rgba(17,23,34,.96);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}
 .hero{padding:20px;overflow:hidden}
 .eyebrow,.label{font-size:10px;font-weight:900;letter-spacing:.1em;color:var(--muted)}
