@@ -12,6 +12,7 @@ on:
       - 'README.md'
       - 'README_PUBLIC.md'
       - '.github/workflows/public-pwa-ci.yml'
+      - 'evidence/**'
   workflow_dispatch:
 
 permissions:
@@ -97,6 +98,24 @@ jobs:
           assert "cache:'no-store'" in sw
           assert 'caches.match(req)' in sw
           print('service worker freshness policy valid')
+          PY
+
+      - name: Validate evidence manifest hashes
+        run: |
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          evidence=json.loads(Path('evidence/v0.5.0-rc1-manifest.json').read_text(encoding='utf-8'))
+          assert evidence['release_candidate']=='v0.5.0-rc1'
+          assert evidence['application_parent_commit']=='63c20e6dadb58e40160400663f7ea51f556b5d57'
+          assert evidence['prior_ci']['run_id']==34621478223
+          assert evidence['prior_ci']['conclusion']=='success'
+          for item in evidence['files']:
+              path=Path(item['path'])
+              data=path.read_bytes()
+              assert len(data)==item['size'], item['path']
+              assert hashlib.sha256(data).hexdigest().upper()==item['sha256'], item['path']
+          print('evidence manifest hashes valid')
           PY
 
       - name: Validate manifest and release consistency
