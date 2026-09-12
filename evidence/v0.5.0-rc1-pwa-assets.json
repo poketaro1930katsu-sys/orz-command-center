@@ -4,31 +4,35 @@
   "repository": "poketaro1930katsu-sys/orz-command-center",
   "branch": "app/command-center-v0.5.0-completion-20260912",
   "captured_from_head": "941185757effd395536aa34ce2efda93b3ce7388",
-  "fingerprint_algorithm": "git-blob-sha1",
+  "fingerprint_algorithm": "sha256+git-blob-sha1",
   "assets": [
     {
       "path": "icon.svg",
       "size": 657,
       "git_blob_sha1": "984f07a7caca6711a8c4981b6b338a43afda01cb",
-      "role": "browser_favicon"
+      "role": "browser_favicon",
+      "sha256": "8F27AF0F5E3FAF41E0230C82E348306A9920FCAD0A647DC15ACAD9843DF134E1"
     },
     {
       "path": "icon-192.png",
       "size": 3494,
       "git_blob_sha1": "29daa6aa18ea1a294161d9a292ea3fa737d4060f",
-      "role": "webmanifest_192"
+      "role": "webmanifest_192",
+      "sha256": "E6A9575181913DB25F44CB069EAC51B2A0F767297BF83A22AB090EA87806E3C6"
     },
     {
       "path": "icon-512.png",
       "size": 9808,
       "git_blob_sha1": "5641dd8bb2a5587e91719ba1844cb99b104ee9f6",
-      "role": "webmanifest_512"
+      "role": "webmanifest_512",
+      "sha256": "BB48405A557EC812FC97C692814FC03EE063F22B34A2CA63AE95007A1A4CF2D8"
     },
     {
       "path": "apple-touch-icon.png",
       "size": 3227,
       "git_blob_sha1": "4a0b4112d65895ae9b1fda83d50532881e12bf81",
-      "role": "ios_touch_icon"
+      "role": "ios_touch_icon",
+      "sha256": "F33357CBEF7E17E04661493E935763EE5AFECA7C2DDA8DCC9B813270CF03201C"
     }
   ],
   "safety": {
@@ -37,5 +41,5 @@
     "credentials_exposed": false,
     "trade_capability": "NONE"
   },
-  "note": "Supplemental PWA asset integrity evidence. The primary RC manifest continues to bind critical text/control files with SHA256. This supplemental manifest pins public icon assets by Git blob content fingerprint and byte size so icon-only drift triggers an independent CI gate."
+  "note": "Supplemental PWA asset integrity evidence. The primary RC manifest binds critical text/control files with SHA256. This supplemental manifest independently pins public icon assets by SHA256, Git blob content fingerprint, byte size, role, and CI-validated PWA references so icon-only drift fails closed."
 }
