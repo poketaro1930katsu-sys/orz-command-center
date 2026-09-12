@@ -44,13 +44,18 @@ jobs:
           assert age_seconds <= 72*3600
           assert data['source']['repository']=='poketaro1930katsu-sys/orz-ea-development'
           assert data['source']['branch']=='main'
-          assert re.fullmatch(r'[0-9a-f]{40}',data['source']['main_sha'])
-          assert data['canonical']['version']=='0.3.1'
-          assert re.fullmatch(r'[0-9A-F]{64}',data['canonical']['source_sha256'])
+          assert data['source']['main_sha']=='d00e44751e43ba3dad08db295d6c5b168a34a13a'
+          assert data['canonical']['version']=='0.3.6'
+          assert data['canonical']['property_version']=='3.06'
+          assert data['canonical']['source_sha256']=='BA2D7876E23112B39239272D30594FA7530A9ECB37D9BCA5674877A2B1F2ED45'
+          assert data['canonical']['previous_version']=='0.3.5'
+          assert data['canonical']['previous_preserved'] is True
           assert data['strategy_track']['last_formal_proof']=='GP014A'
           assert data['strategy_track']['last_formal_result']=='PASS'
           assert data['strategy_track']['next_gate']=='GP014B'
           assert data['strategy_track']['runtime_authorized'] is False
+          assert data['implementation_gate']['name']=='V036_CANONICAL_PROMOTION'
+          assert data['implementation_gate']['status']=='V036_CANONICAL_EVIDENCE_RECORDED_NEXT_IMPLEMENTATION_UNAUTHORIZED'
           assert data['implementation_gate']['source_implementation_authorized'] is False
           assert data['implementation_gate']['next_version_label']=='UNRESOLVED_DO_NOT_INFER'
           assert data['performance']['published'] is False
