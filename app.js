@@ -217,7 +217,8 @@
       else b.removeAttribute('aria-current');
     });
     if(updateHash && location.hash !== `#${name}`) history.replaceState(null,'',`#${name}`);
-    window.scrollTo({top:0,behavior:'smooth'});
+    const reduceMotion=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({top:0,behavior:reduceMotion?'auto':'smooth'});
   }
 
   function bindUi() {
