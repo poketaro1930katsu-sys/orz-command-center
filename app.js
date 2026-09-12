@@ -20,6 +20,7 @@
   }
 
   function validateStatus(data) {
+    required(data,'project');
     required(data,'schema_version');
     required(data,'release_channel');
     required(data,'snapshot_generated_at_jst');
@@ -27,8 +28,10 @@
     required(data,'source.branch');
     required(data,'source.main_sha');
     required(data,'source.main_commit_at_jst');
+    required(data,'source.authority');
     required(data,'canonical.version');
     required(data,'canonical.source_sha256');
+    required(data,'canonical.promotion_status');
     required(data,'strategy_track.last_formal_proof');
     required(data,'strategy_track.last_formal_result');
     required(data,'strategy_track.status');
@@ -47,12 +50,15 @@
     required(data,'safety.private_evidence_exposed');
     required(data,'safety.credentials_exposed');
 
+    if (data.project !== 'ORZ_EA') throw new Error('project_identity_invalid');
     if (data.schema_version !== 'public-0.2') throw new Error('schema_version_invalid');
     if (data.release_channel !== 'v0.5.0-rc1') throw new Error('release_channel_invalid');
     if (data.source.repository !== 'poketaro1930katsu-sys/orz-ea-development') throw new Error('source_repository_invalid');
     if (data.source.branch !== 'main') throw new Error('source_branch_invalid');
+    if (data.source.authority !== 'REPOSITORY_EVIDENCE') throw new Error('source_authority_invalid');
     if (!/^[0-9a-f]{40}$/.test(data.source.main_sha)) throw new Error('source_main_sha_invalid');
     if (!/^[0-9A-F]{64}$/.test(data.canonical.source_sha256)) throw new Error('canonical_sha256_invalid');
+    if (data.canonical.promotion_status !== 'CANONICAL_PROMOTED') throw new Error('canonical_promotion_status_invalid');
     if (data.performance.published !== false || data.performance.status !== 'UNVERIFIED_NOT_PUBLISHED') throw new Error('performance_publication_boundary_invalid');
     if (data.safety.fail_closed !== true) throw new Error('fail_closed_must_be_true');
     if (data.safety.real_money !== 'PROHIBITED') throw new Error('real_money_boundary_invalid');
