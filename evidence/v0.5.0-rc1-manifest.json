@@ -45,8 +45,8 @@
     },
     {
       "path": "app.js",
-      "size": 13694,
-      "sha256": "FB4296A5614D621247412F535AEE90D76DE79B140341CDF96C2D47631B2658E4"
+      "size": 14115,
+      "sha256": "3531C6FF6A8C45D8437675B93D89D4786BD8374A400740344501B3FD98A00645"
     },
     {
       "path": "public-status.json",
@@ -75,9 +75,9 @@
     },
     {
       "path": ".github/workflows/public-pwa-ci.yml",
-      "size": 10395,
-      "sha256": "C80F8A7E6A7B14AC8DC4662A700CE1261C09F1983DF9D247AA65310D2E527AFA"
+      "size": 11014,
+      "sha256": "9872E57B3CC3A16E419866509DE112CD3542C8061BA0AFF71A872558C15061AE"
     }
   ],
-  "note": "SHA256 manifest binds the release-candidate application files and intentionally does not hash itself. CI enforces exact duplicate-free release-candidate coverage, path confinement, byte size, and SHA256. On 2026-09-13 JST the read-only Source of Truth was re-read after source drift: main advanced to d00e44751e43ba3dad08db295d6c5b168a34a13a and the repository now records non-trading Canonical v0.3.6 with source SHA256 BA2D7876E23112B39239272D30594FA7530A9ECB37D9BCA5674877A2B1F2ED45, runtime 7/7 PASS, independent audit PASS_V2, and post-promotion read-back PASS. GP014B Runtime, Trade, Live, and Real Money remain unauthorized. Freshness remains based on snapshot_generated_at_jst; stale, invalid, or materially future-dated snapshots fail closed before PASS renders. Production main merge/deployment remains a separate Human Decision. Static UI audit removed the stale version-coupled label `Post-V031 Gate` and replaced it with version-neutral `Implementation Gate`; no strategy, runtime, Canonical, or trading authority changed. Accessibility hardening makes tab-navigation scroll behavior honor `prefers-reduced-motion: reduce` instead of forcing smooth scrolling. Project-isolation audit removed the cross-project `KOMEI READ-ONLY NAVIGATOR` label from the ORZ-only application, replaced it with `ORZ READ-ONLY NAVIGATOR`, and added CI enforcement that the KOMEI label is absent. No source authority, runtime, Canonical, data, or trading boundary changed."
+  "note": "SHA256 manifest binds the release-candidate application files and intentionally does not hash itself. CI enforces exact duplicate-free release-candidate coverage, path confinement, byte size, and SHA256. On 2026-09-13 JST the read-only Source of Truth was re-read after source drift: main advanced to d00e44751e43ba3dad08db295d6c5b168a34a13a and the repository now records non-trading Canonical v0.3.6 with source SHA256 BA2D7876E23112B39239272D30594FA7530A9ECB37D9BCA5674877A2B1F2ED45, runtime 7/7 PASS, independent audit PASS_V2, and post-promotion read-back PASS. GP014B Runtime, Trade, Live, and Real Money remain unauthorized. Freshness remains based on snapshot_generated_at_jst; stale, invalid, or materially future-dated snapshots fail closed before PASS renders. Production main merge/deployment remains a separate Human Decision. Static UI audit removed the stale version-coupled label `Post-V031 Gate` and replaced it with version-neutral `Implementation Gate`; no strategy, runtime, Canonical, or trading authority changed. Accessibility hardening makes tab-navigation scroll behavior honor `prefers-reduced-motion: reduce` instead of forcing smooth scrolling. Project-isolation audit removed the cross-project `KOMEI READ-ONLY NAVIGATOR` label from the ORZ-only application, replaced it with `ORZ READ-ONLY NAVIGATOR`, and added CI enforcement that the KOMEI label is absent. Runtime provenance hardening now also requires the ORZ project identity, `REPOSITORY_EVIDENCE` source authority, and `CANONICAL_PROMOTED` canonical status before any snapshot may render PASS-state values. CI binds these guards and the matching public snapshot fields. No source authority, runtime, Canonical, data, or trading boundary changed."
 }
