@@ -1,0 +1,93 @@
+name: pwa-asset-integrity
+
+on:
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'sw.js'
+      - 'manifest.webmanifest'
+      - 'icon.svg'
+      - 'icon-192.png'
+      - 'icon-512.png'
+      - 'apple-touch-icon.png'
+      - 'evidence/v0.5.0-rc1-pwa-assets.json'
+      - '.github/workflows/pwa-asset-integrity.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-pwa-assets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate asset graph and pinned fingerprints
+        run: |
+          python - <<'PY'
+          import hashlib, json, struct
+          from pathlib import Path
+
+          evidence=json.loads(Path('evidence/v0.5.0-rc1-pwa-assets.json').read_text(encoding='utf-8'))
+          manifest=json.loads(Path('manifest.webmanifest').read_text(encoding='utf-8'))
+          html=Path('index.html').read_text(encoding='utf-8')
+          sw=Path('sw.js').read_text(encoding='utf-8')
+
+          assert evidence['schema_version']=='orz-command-center-pwa-assets-0.1'
+          assert evidence['release_candidate']=='v0.5.0-rc1'
+          assert evidence['repository']=='poketaro1930katsu-sys/orz-command-center'
+          assert evidence['fingerprint_algorithm']=='git-blob-sha1'
+          assert evidence['safety']['public_read_only'] is True
+          assert evidence['safety']['private_evidence_exposed'] is False
+          assert evidence['safety']['credentials_exposed'] is False
+          assert evidence['safety']['trade_capability']=='NONE'
+
+          expected_rows={
+              'icon.svg':(657,'984f07a7caca6711a8c4981b6b338a43afda01cb','browser_favicon'),
+              'icon-192.png':(3494,'29daa6aa18ea1a294161d9a292ea3fa737d4060f','webmanifest_192'),
+              'icon-512.png':(9808,'5641dd8bb2a5587e91719ba1844cb99b104ee9f6','webmanifest_512'),
+              'apple-touch-icon.png':(3227,'4a0b4112d65895ae9b1fda83d50532881e12bf81','ios_touch_icon'),
+          }
+          rows={item['path']:(item['size'],item['git_blob_sha1'],item['role']) for item in evidence['assets']}
+          assert rows==expected_rows, rows
+
+          expected_manifest_icons={
+              './icon-192.png':('192x192','image/png','any maskable'),
+              './icon-512.png':('512x512','image/png','any maskable'),
+          }
+          actual_icons={item['src']:(item['sizes'],item['type'],item.get('purpose','')) for item in manifest['icons']}
+          assert actual_icons==expected_manifest_icons, actual_icons
+          assert '<link rel="icon" href="./icon.svg">' in html
+          assert '<link rel="apple-touch-icon" href="./apple-touch-icon.png">' in html
+
+          for asset in ['./icon.svg','./icon-192.png','./icon-512.png','./apple-touch-icon.png']:
+              assert asset in sw, asset
+
+          expected_png_dims={
+              'icon-192.png':(192,192),
+              'icon-512.png':(512,512),
+              'apple-touch-icon.png':(180,180),
+          }
+          for raw_path,(expected_size,expected_sha,_role) in expected_rows.items():
+              data=Path(raw_path).read_bytes()
+              assert len(data)==expected_size, raw_path
+              git_blob=hashlib.sha1(f'blob {len(data)}\0'.encode()+data).hexdigest()
+              assert git_blob==expected_sha, raw_path
+              print(raw_path,'sha256',hashlib.sha256(data).hexdigest().upper())
+              if raw_path.endswith('.png'):
+                  assert data.startswith(b'\x89PNG\r\n\x1a\n'), raw_path
+                  assert data[12:16]==b'IHDR', raw_path
+                  width,height=struct.unpack('>II',data[16:24])
+                  assert (width,height)==expected_png_dims[raw_path], (raw_path,width,height)
+
+          svg=Path('icon.svg').read_text(encoding='utf-8').lower()
+          for forbidden in ['<script','javascript:','http://','https://']:
+              assert forbidden not in svg, forbidden
+
+          print('PWA asset graph and pinned fingerprints valid')
+          PY
+
+# Validation only. No deployment, merge, repository secret, or runtime/trading operation is performed.
