@@ -12,6 +12,7 @@ on:
       - 'README.md'
       - 'README_PUBLIC.md'
       - '.github/workflows/public-pwa-ci.yml'
+      - '.github/workflows/pwa-asset-integrity.yml'
       - 'evidence/**'
   workflow_dispatch:
 
@@ -200,6 +201,8 @@ jobs:
               'README.md',
               'README_PUBLIC.md',
               '.github/workflows/public-pwa-ci.yml',
+              '.github/workflows/pwa-asset-integrity.yml',
+              'evidence/v0.5.0-rc1-pwa-assets.json',
           }
           paths=[item['path'] for item in evidence['files']]
           assert len(paths)==len(set(paths)), 'duplicate evidence manifest path'
