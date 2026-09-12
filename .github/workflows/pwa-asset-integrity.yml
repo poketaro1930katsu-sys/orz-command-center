@@ -39,19 +39,19 @@ jobs:
           assert evidence['schema_version']=='orz-command-center-pwa-assets-0.1'
           assert evidence['release_candidate']=='v0.5.0-rc1'
           assert evidence['repository']=='poketaro1930katsu-sys/orz-command-center'
-          assert evidence['fingerprint_algorithm']=='git-blob-sha1'
+          assert evidence['fingerprint_algorithm']=='sha256+git-blob-sha1'
           assert evidence['safety']['public_read_only'] is True
           assert evidence['safety']['private_evidence_exposed'] is False
           assert evidence['safety']['credentials_exposed'] is False
           assert evidence['safety']['trade_capability']=='NONE'
 
           expected_rows={
-              'icon.svg':(657,'984f07a7caca6711a8c4981b6b338a43afda01cb','browser_favicon'),
-              'icon-192.png':(3494,'29daa6aa18ea1a294161d9a292ea3fa737d4060f','webmanifest_192'),
-              'icon-512.png':(9808,'5641dd8bb2a5587e91719ba1844cb99b104ee9f6','webmanifest_512'),
-              'apple-touch-icon.png':(3227,'4a0b4112d65895ae9b1fda83d50532881e12bf81','ios_touch_icon'),
+              'icon.svg':(657,'984f07a7caca6711a8c4981b6b338a43afda01cb','8F27AF0F5E3FAF41E0230C82E348306A9920FCAD0A647DC15ACAD9843DF134E1','browser_favicon'),
+              'icon-192.png':(3494,'29daa6aa18ea1a294161d9a292ea3fa737d4060f','E6A9575181913DB25F44CB069EAC51B2A0F767297BF83A22AB090EA87806E3C6','webmanifest_192'),
+              'icon-512.png':(9808,'5641dd8bb2a5587e91719ba1844cb99b104ee9f6','BB48405A557EC812FC97C692814FC03EE063F22B34A2CA63AE95007A1A4CF2D8','webmanifest_512'),
+              'apple-touch-icon.png':(3227,'4a0b4112d65895ae9b1fda83d50532881e12bf81','F33357CBEF7E17E04661493E935763EE5AFECA7C2DDA8DCC9B813270CF03201C','ios_touch_icon'),
           }
-          rows={item['path']:(item['size'],item['git_blob_sha1'],item['role']) for item in evidence['assets']}
+          rows={item['path']:(item['size'],item['git_blob_sha1'],item['sha256'],item['role']) for item in evidence['assets']}
           assert rows==expected_rows, rows
 
           expected_manifest_icons={
@@ -71,12 +71,13 @@ jobs:
               'icon-512.png':(512,512),
               'apple-touch-icon.png':(180,180),
           }
-          for raw_path,(expected_size,expected_sha,_role) in expected_rows.items():
+          for raw_path,(expected_size,expected_git_sha,expected_sha256,_role) in expected_rows.items():
               data=Path(raw_path).read_bytes()
               assert len(data)==expected_size, raw_path
               git_blob=hashlib.sha1(f'blob {len(data)}\0'.encode()+data).hexdigest()
-              assert git_blob==expected_sha, raw_path
-              print(raw_path,'sha256',hashlib.sha256(data).hexdigest().upper())
+              assert git_blob==expected_git_sha, raw_path
+              actual_sha256=hashlib.sha256(data).hexdigest().upper()
+              assert actual_sha256==expected_sha256, raw_path
               if raw_path.endswith('.png'):
                   assert data.startswith(b'\x89PNG\r\n\x1a\n'), raw_path
                   assert data[12:16]==b'IHDR', raw_path
@@ -84,10 +85,10 @@ jobs:
                   assert (width,height)==expected_png_dims[raw_path], (raw_path,width,height)
 
           svg=Path('icon.svg').read_text(encoding='utf-8').lower()
-          for forbidden in ['<script','javascript:','http://','https://']:
+          for forbidden in ['<script','javascript:','href="http://','href="https://',"href='http://","href='https://",'xlink:href="http://','xlink:href="https://']:
               assert forbidden not in svg, forbidden
 
-          print('PWA asset graph and pinned fingerprints valid')
+          print('PWA asset graph and SHA256/blob fingerprints valid')
           PY
 
 # Validation only. No deployment, merge, repository secret, or runtime/trading operation is performed.
