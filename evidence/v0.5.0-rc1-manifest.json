@@ -45,8 +45,8 @@
     },
     {
       "path": "app.js",
-      "size": 13586,
-      "sha256": "BB437524667E232DA8985086DBFEDB7CAFCE41399D81FFB50AD06E3348A40F19"
+      "size": 13694,
+      "sha256": "FB4296A5614D621247412F535AEE90D76DE79B140341CDF96C2D47631B2658E4"
     },
     {
       "path": "public-status.json",
@@ -79,5 +79,5 @@
       "sha256": "883D227F25B96F3BC6E32C2E2D23896DDF05F4F330F416555E0A270DCBC0F3BA"
     }
   ],
-  "note": "SHA256 manifest binds the release-candidate application files and intentionally does not hash itself. CI enforces exact duplicate-free release-candidate coverage, path confinement, byte size, and SHA256. On 2026-09-13 JST the read-only Source of Truth was re-read after source drift: main advanced to d00e44751e43ba3dad08db295d6c5b168a34a13a and the repository now records non-trading Canonical v0.3.6 with source SHA256 BA2D7876E23112B39239272D30594FA7530A9ECB37D9BCA5674877A2B1F2ED45, runtime 7/7 PASS, independent audit PASS_V2, and post-promotion read-back PASS. GP014B Runtime, Trade, Live, and Real Money remain unauthorized. Freshness remains based on snapshot_generated_at_jst; stale, invalid, or materially future-dated snapshots fail closed before PASS renders. Production main merge/deployment remains a separate Human Decision. Static UI audit removed the stale version-coupled label `Post-V031 Gate` and replaced it with version-neutral `Implementation Gate`; no strategy, runtime, Canonical, or trading authority changed."
+  "note": "SHA256 manifest binds the release-candidate application files and intentionally does not hash itself. CI enforces exact duplicate-free release-candidate coverage, path confinement, byte size, and SHA256. On 2026-09-13 JST the read-only Source of Truth was re-read after source drift: main advanced to d00e44751e43ba3dad08db295d6c5b168a34a13a and the repository now records non-trading Canonical v0.3.6 with source SHA256 BA2D7876E23112B39239272D30594FA7530A9ECB37D9BCA5674877A2B1F2ED45, runtime 7/7 PASS, independent audit PASS_V2, and post-promotion read-back PASS. GP014B Runtime, Trade, Live, and Real Money remain unauthorized. Freshness remains based on snapshot_generated_at_jst; stale, invalid, or materially future-dated snapshots fail closed before PASS renders. Production main merge/deployment remains a separate Human Decision. Static UI audit removed the stale version-coupled label `Post-V031 Gate` and replaced it with version-neutral `Implementation Gate`; no strategy, runtime, Canonical, or trading authority changed. Accessibility hardening now makes tab-navigation scroll behavior honor `prefers-reduced-motion: reduce` instead of forcing smooth scrolling; no data, authority, or safety boundary changed."
 }
