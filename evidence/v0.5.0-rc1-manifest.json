@@ -35,8 +35,8 @@
   "files": [
     {
       "path": "index.html",
-      "size": 11588,
-      "sha256": "BB830F1FF370129E6AAEE0536FE299093F4BF120B9BC6602CF4C725BC4864609"
+      "size": 11586,
+      "sha256": "FF8B93FECDBBEFB5BF8BEA22ED31A1B893007BB63F5E8049CBD3CD49482AFA56"
     },
     {
       "path": "styles.css",
@@ -75,9 +75,9 @@
     },
     {
       "path": ".github/workflows/public-pwa-ci.yml",
-      "size": 10308,
-      "sha256": "883D227F25B96F3BC6E32C2E2D23896DDF05F4F330F416555E0A270DCBC0F3BA"
+      "size": 10395,
+      "sha256": "C80F8A7E6A7B14AC8DC4662A700CE1261C09F1983DF9D247AA65310D2E527AFA"
     }
   ],
-  "note": "SHA256 manifest binds the release-candidate application files and intentionally does not hash itself. CI enforces exact duplicate-free release-candidate coverage, path confinement, byte size, and SHA256. On 2026-09-13 JST the read-only Source of Truth was re-read after source drift: main advanced to d00e44751e43ba3dad08db295d6c5b168a34a13a and the repository now records non-trading Canonical v0.3.6 with source SHA256 BA2D7876E23112B39239272D30594FA7530A9ECB37D9BCA5674877A2B1F2ED45, runtime 7/7 PASS, independent audit PASS_V2, and post-promotion read-back PASS. GP014B Runtime, Trade, Live, and Real Money remain unauthorized. Freshness remains based on snapshot_generated_at_jst; stale, invalid, or materially future-dated snapshots fail closed before PASS renders. Production main merge/deployment remains a separate Human Decision. Static UI audit removed the stale version-coupled label `Post-V031 Gate` and replaced it with version-neutral `Implementation Gate`; no strategy, runtime, Canonical, or trading authority changed. Accessibility hardening now makes tab-navigation scroll behavior honor `prefers-reduced-motion: reduce` instead of forcing smooth scrolling; no data, authority, or safety boundary changed."
+  "note": "SHA256 manifest binds the release-candidate application files and intentionally does not hash itself. CI enforces exact duplicate-free release-candidate coverage, path confinement, byte size, and SHA256. On 2026-09-13 JST the read-only Source of Truth was re-read after source drift: main advanced to d00e44751e43ba3dad08db295d6c5b168a34a13a and the repository now records non-trading Canonical v0.3.6 with source SHA256 BA2D7876E23112B39239272D30594FA7530A9ECB37D9BCA5674877A2B1F2ED45, runtime 7/7 PASS, independent audit PASS_V2, and post-promotion read-back PASS. GP014B Runtime, Trade, Live, and Real Money remain unauthorized. Freshness remains based on snapshot_generated_at_jst; stale, invalid, or materially future-dated snapshots fail closed before PASS renders. Production main merge/deployment remains a separate Human Decision. Static UI audit removed the stale version-coupled label `Post-V031 Gate` and replaced it with version-neutral `Implementation Gate`; no strategy, runtime, Canonical, or trading authority changed. Accessibility hardening makes tab-navigation scroll behavior honor `prefers-reduced-motion: reduce` instead of forcing smooth scrolling. Project-isolation audit removed the cross-project `KOMEI READ-ONLY NAVIGATOR` label from the ORZ-only application, replaced it with `ORZ READ-ONLY NAVIGATOR`, and added CI enforcement that the KOMEI label is absent. No source authority, runtime, Canonical, data, or trading boundary changed."
 }
