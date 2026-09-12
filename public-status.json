@@ -2,20 +2,20 @@
   "project": "ORZ_EA",
   "schema_version": "public-0.2",
   "release_channel": "v0.5.0-rc1",
-  "snapshot_generated_at_jst": "2026-09-12T04:22:06+09:00",
+  "snapshot_generated_at_jst": "2026-09-13T00:35:28+09:00",
   "source": {
     "repository": "poketaro1930katsu-sys/orz-ea-development",
     "branch": "main",
-    "main_sha": "04d80a85d9fb1b5660bee3c9a5f8a9f5b6c9c9eb",
-    "main_commit_at_jst": "2026-09-12T01:44:31+09:00",
+    "main_sha": "d00e44751e43ba3dad08db295d6c5b168a34a13a",
+    "main_commit_at_jst": "2026-09-12T15:50:18+09:00",
     "authority": "REPOSITORY_EVIDENCE"
   },
   "canonical": {
-    "version": "0.3.1",
-    "property_version": "3.01",
-    "source_sha256": "56C7F675756E8C234C8E75845D8D7CD2F1D1F6AD35A4A58DFD2F0480842F3DAF",
+    "version": "0.3.6",
+    "property_version": "3.06",
+    "source_sha256": "BA2D7876E23112B39239272D30594FA7530A9ECB37D9BCA5674877A2B1F2ED45",
     "promotion_status": "CANONICAL_PROMOTED",
-    "previous_version": "0.3.0",
+    "previous_version": "0.3.5",
     "previous_preserved": true
   },
   "strategy_track": {
@@ -25,37 +25,38 @@
     "status": "PENDING_SEPARATE_AUTHORIZATION",
     "next_gate": "GP014B",
     "runtime_authorized": false,
-    "next_gate_note": "GP014BはPENDINGです。HC1 implementation candidateのEvidence記録・compile/runtime PASSは、GP014B runtime・取引・実資金の許可を意味しません。",
-    "summary": "GP014Aは正式Evidenceとして維持され、Post-V031 HC1 implementation candidateはRepository Evidenceに記録済みです。Canonicalはv0.3.1のまま、GP014B runtimeは未許可です。",
+    "next_gate_note": "GP014BはPENDINGです。v0.3.6 Canonical promotion・compile/runtime Evidenceは、GP014B runtime・取引・実資金の許可を意味しません。",
+    "summary": "GP014Aは正式Evidenceとして維持されています。Source of Truthでは非取引Canonicalがv0.3.6へ進み、GP014B runtime・Trade・Live・Real Moneyは引き続き未許可です。",
     "confirmed": [
       "GP014A / PASS のRepository Evidence",
-      "Canonical v0.3.1 のpromotion record",
-      "Post-V031 HC1 candidate: compile 0 errors / 0 warnings",
-      "Post-V031 HC1 candidate: Demo runtime 7/7 PASS / final positions 0 / orders 0"
+      "Canonical v0.3.6 promotion record / post-promotion read-back PASS",
+      "v0.3.6: compile 0 errors / 0 warnings",
+      "v0.3.6: Demo non-trading runtime 7/7 PASS / Safe Restore PASS / independent pre-promotion audit V2 PASS"
     ],
     "not_authorized": [
-      "HC1 candidateのCanonical promotion",
       "GP014B runtime",
       "Live trading / real-money execution",
-      "自動WAIT→ENTRY / SKIP / CONTINUE",
+      "Trade implementation / Trade API",
+      "次Version・追加実装の自動承認",
       "未回収の戦略ルール・閾値・Version labelの推測実装"
     ]
   },
   "implementation_gate": {
-    "name": "POST_V031_HUMAN_CONFIRMED_HC1",
-    "status": "HC1_IMPLEMENTATION_CANDIDATE_EVIDENCE_RECORDED_NOT_CANONICAL",
-    "status_short": "HC1 CANDIDATE",
+    "name": "V036_CANONICAL_PROMOTION",
+    "status": "V036_CANONICAL_EVIDENCE_RECORDED_NEXT_IMPLEMENTATION_UNAUTHORIZED",
+    "status_short": "v0.3.6 CANONICAL",
     "source_implementation_authorized": false,
     "next_version_label": "UNRESOLVED_DO_NOT_INFER",
-    "allowed_scope_summary": "Human-confirmed plumbing candidateのEvidence記録済み。追加実装・Canonical promotion・GP014B runtime・取引は別Gateです。",
-    "candidate": {
-      "label": "POST_V031_HUMAN_CONFIRMED_HC1",
-      "source_sha256": "5DAA717402C99D8E224D4E0D7B6A506E3C658E88E80AFB157D9C8651113B1579",
-      "ex5_sha256": "AF0C88B12A7E79B91239A8BE5CC991F2AD6E2C83A93E087BEC7FE90AD97E1718",
-      "compile_result": "0_ERRORS_0_WARNINGS",
+    "allowed_scope_summary": "v0.3.6 Canonical promotionのRepository Evidenceは確認済みです。追加実装・次Version・GP014B runtime・取引は別Gateです。",
+    "latest_canonical_evidence": {
+      "contract_id": "V036-CANONICAL-PROMOTION-20260912",
+      "canonical_source_sha256": "BA2D7876E23112B39239272D30594FA7530A9ECB37D9BCA5674877A2B1F2ED45",
+      "nontrading_proof_ex5_sha256": "7783F7159BEAFB57A4346C07DAE0AF24FB0678CC097E9D4F53F68F7E9765BEF2",
+      "bundle_manifest_sha256": "60C6BA154756B3724F3E8B08A3C1505EE64685C48DBEE81D662C81A804F3A215",
       "runtime_cases": "7_OF_7_PASS",
-      "repository_record": "PR_44_MERGED",
-      "canonical_promoted": false
+      "independent_audit": "PASS_V2",
+      "post_promotion_readback": "PASS",
+      "rollback_target": "0.3.5"
     }
   },
   "performance": {
@@ -72,5 +73,5 @@
     "private_evidence_exposed": false,
     "credentials_exposed": false
   },
-  "public_notice": "この公開PWAはREAD-ONLY可視化層です。HC1 candidateは非Canonicalです。画面表示・compile/runtime Evidenceは実行許可ではなく、未確認・古い・不整合な状態は自動でPASSへ昇格しません。Snapshot freshnessは公開状態を再検証した時刻で判定し、Source commit時刻はprovenanceとして別表示します。"
+  "public_notice": "この公開PWAはREAD-ONLY可視化層です。Canonical v0.3.6は非取引Evidenceに基づく表示であり、画面表示・compile/runtime EvidenceはGP014B runtime・Trade・Live・Real Moneyの実行許可ではありません。未確認・古い・不整合な状態は自動でPASSへ昇格しません。Snapshot freshnessは公開状態を再検証した時刻で判定し、Source commit時刻はprovenanceとして別表示します。"
 }
