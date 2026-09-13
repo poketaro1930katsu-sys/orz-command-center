@@ -1,0 +1,93 @@
+{
+  "schema_version": "orz-command-center-evidence-0.1",
+  "release_candidate": "v0.5.0-rc1",
+  "repository": "poketaro1930katsu-sys/orz-command-center",
+  "branch": "app/command-center-v0.5.0-completion-20260912",
+  "application_parent_commit": "63c20e6dadb58e40160400663f7ea51f556b5d57",
+  "snapshot_generated_at_jst": "2026-09-14T00:34:19+09:00",
+  "source_authority": {
+    "repository": "poketaro1930katsu-sys/orz-ea-development",
+    "main_sha": "d00e44751e43ba3dad08db295d6c5b168a34a13a",
+    "canonical_version": "0.3.6",
+    "canonical_property_version": "3.06",
+    "canonical_source_sha256": "BA2D7876E23112B39239272D30594FA7530A9ECB37D9BCA5674877A2B1F2ED45",
+    "formal_strategy_proof": "GP014A",
+    "next_gate": "GP014B",
+    "gp014b_runtime_authorized": false,
+    "canonical_contract": "V036-CANONICAL-PROMOTION-20260912",
+    "nontrading_runtime": "7_OF_7_PASS",
+    "independent_audit": "PASS_V2",
+    "post_promotion_readback": "PASS",
+    "rollback_target": "0.3.5"
+  },
+  "prior_ci": {
+    "run_id": 34633571706,
+    "run_number": 10,
+    "conclusion": "success"
+  },
+  "safety": {
+    "fail_closed": true,
+    "real_money": "PROHIBITED",
+    "live_trade_control": "NOT_PRESENT_IN_COMMAND_CENTER",
+    "canonical_frozen_auto_edit": "BLOCKED",
+    "command_center_trade_api": "NONE"
+  },
+  "files": [
+    {
+      "path": "index.html",
+      "size": 11720,
+      "sha256": "82E45DE38E341706A31F7BFF1DE62F3083C1303FC9015347EA35164D4273B91C"
+    },
+    {
+      "path": "styles.css",
+      "size": 8196,
+      "sha256": "7A28048180B70FA58BEDB481D073A7B252F4174BF560C4258143FFF46E096B08"
+    },
+    {
+      "path": "app.js",
+      "size": 16886,
+      "sha256": "6A744BF7865D5CD16EF169B10B0C2B47ED6755AF85E62111A7454BF415F84822"
+    },
+    {
+      "path": "public-status.json",
+      "size": 3993,
+      "sha256": "B6CEADAB104AB30109A8C0AFD19187B67035C6D3E53ACE044DCFCF057B102401"
+    },
+    {
+      "path": "sw.js",
+      "size": 1275,
+      "sha256": "174E1311A048459AEC1518D85C8654C116FAFF860B3683B1C92DE80CA1B1A02E"
+    },
+    {
+      "path": "manifest.webmanifest",
+      "size": 592,
+      "sha256": "E18D568B16A2B0F5BC14D238D4C5C5B510834DE9E4E522A011B0C00FE195F4F8"
+    },
+    {
+      "path": "README.md",
+      "size": 190,
+      "sha256": "E8BAC46CD99B03F3C5853D89B856A2C4CB87BF4FF6A1A8A172C6AFE896CFA7C9"
+    },
+    {
+      "path": "README_PUBLIC.md",
+      "size": 1354,
+      "sha256": "CE70919000FC81B4A56FBA80B0C2799D058821BF2D65314A4B9707994232C9FA"
+    },
+    {
+      "path": ".github/workflows/public-pwa-ci.yml",
+      "size": 18511,
+      "sha256": "BF6EEEE968384C8F807D1F4E973339D4999A146DD844C32D7904729E20CC549D"
+    },
+    {
+      "path": ".github/workflows/pwa-asset-integrity.yml",
+      "size": 4570,
+      "sha256": "52241F93406F0D562E55D08E6431F756C6C536C2F0D70A8B6C8A7F3F3F5C2EA3"
+    },
+    {
+      "path": "evidence/v0.5.0-rc1-pwa-assets.json",
+      "size": 1809,
+      "sha256": "29FEF0553EF887451BAE550CBB59EAF88C2C12F7240EEEDE06B2F3632564386B"
+    }
+  ],
+  "note": "SHA256 manifest binds the release-candidate application files and intentionally does not hash itself. CI enforces exact duplicate-free release-candidate coverage, path confinement, byte size, and SHA256. On 2026-09-13 JST the read-only Source of Truth was re-read after source drift: main advanced to d00e44751e43ba3dad08db295d6c5b168a34a13a and the repository now records non-trading Canonical v0.3.6 with source SHA256 BA2D7876E23112B39239272D30594FA7530A9ECB37D9BCA5674877A2B1F2ED45, runtime 7/7 PASS, independent audit PASS_V2, and post-promotion read-back PASS. GP014B Runtime, Trade, Live, and Real Money remain unauthorized. Freshness remains based on snapshot_generated_at_jst; stale, invalid, or materially future-dated snapshots fail closed before PASS renders. Production main merge/deployment remains a separate Human Decision. Static UI audit removed the stale version-coupled label `Post-V031 Gate` and replaced it with version-neutral `Implementation Gate`; no strategy, runtime, Canonical, or trading authority changed. Accessibility hardening makes tab-navigation scroll behavior honor `prefers-reduced-motion: reduce` instead of forcing smooth scrolling. Project-isolation audit removed the cross-project `KOMEI READ-ONLY NAVIGATOR` label from the ORZ-only application, replaced it with `ORZ READ-ONLY NAVIGATOR`, and added CI enforcement that the KOMEI label is absent. Runtime provenance hardening now also requires the ORZ project identity, `REPOSITORY_EVIDENCE` source authority, and `CANONICAL_PROMOTED` canonical status before any snapshot may render PASS-state values. CI binds these guards and the matching public snapshot fields. No source authority, runtime, Canonical, data, or trading boundary changed. Final release-control audit additionally cross-binds the independent `pwa-asset-integrity` workflow and its supplemental asset Evidence manifest into the primary SHA256 manifest, so the two validation layers cannot drift independently without `public-pwa-ci` failing. On 2026-09-14 JST, production main and the read-only source main were freshly re-read with no drift; the sanitized public snapshot timestamp and its bound SHA256 were refreshed only, with no authority or capability change. Runtime exact-lineage hardening now binds source.main_sha, canonical.version, and canonical.source_sha256 to the freshly verified Source of Truth values and fails closed on any mismatch. CI includes executable negative controls that mutate each lineage field and require the corresponding mismatch error. Intermediate public-pwa-ci runs #52, #53, and #54 were retained as counter-evidence: the new runtime/negative-control steps passed, while the primary manifest correctly failed until these changed app.js and workflow digests were rebound. No Canonical, runtime, trade, production, credential, or security authority changed. Runtime decision-semantics hardening now also binds the published formal proof/result, strategy authorization status, next gate, implementation-gate status, and unresolved next-version label to the same public contract already enforced by CI; executable negative controls mutate each field and require fail-closed mismatch errors. Safety-display authority hardening now initializes all five safety pills as non-authoritative `確認中`, renders authoritative safety labels only after validated/fresh public-status acceptance, and clears all five to `UNKNOWN` on fail-closed. CI includes both static authority bindings and executable render-to-fail-closed negative-control behavior. Runs #59 and #60 retained expected stale-manifest counter-evidence during implementation; Run #61 proved the new safety regression and all prior runtime guards PASS before the old index.html digest stopped the manifest step. No Canonical, runtime, trade, production, credential, or security authority changed."
+}

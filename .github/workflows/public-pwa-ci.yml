@@ -4,10 +4,16 @@ on:
   pull_request:
     paths:
       - 'index.html'
+      - 'styles.css'
+      - 'app.js'
       - 'public-status.json'
       - 'sw.js'
       - 'manifest.webmanifest'
+      - 'README.md'
+      - 'README_PUBLIC.md'
       - '.github/workflows/public-pwa-ci.yml'
+      - '.github/workflows/pwa-asset-integrity.yml'
+      - 'evidence/**'
   workflow_dispatch:
 
 permissions:
@@ -16,73 +22,348 @@ permissions:
 jobs:
   validate-public-pwa:
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 4
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Validate public status contract
+      - name: Validate public status fail-closed contract
         run: |
           python - <<'PY'
-          import json
+          import json, re
+          from datetime import datetime, timezone
           from pathlib import Path
 
-          p = Path('public-status.json')
-          data = json.loads(p.read_text(encoding='utf-8'))
-          assert data['repository_evidence'] == {
-              'latest_proof': 'GP014A',
-              'result': 'PASS',
-              'authority': 'REPOSITORY_EVIDENCE',
-          }
-          assert data['working_context']['latest_proof'] == 'GP014A'
-          assert data['working_context']['result'] == 'PASS'
-          assert data['working_context']['authority'] == 'WORKING_CONTEXT_RECONCILED'
-          assert data['working_context']['reconciled'] is True
-          assert data['sync_state'] == 'SYNCED_OR_REPOSITORY_AHEAD'
-          assert data['next_action'] == 'GP014B_PENDING_SEPARATE_AUTHORIZATION'
+          data=json.loads(Path('public-status.json').read_text(encoding='utf-8'))
+          assert data['project']=='ORZ_EA'
+          assert data['schema_version']=='public-0.2'
+          assert data['release_channel']=='v0.5.0-rc1'
+          snapshot=data['snapshot_generated_at_jst']
+          assert re.fullmatch(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\+09:00',snapshot)
+          snapshot_dt=datetime.fromisoformat(snapshot)
+          age_seconds=(datetime.now(timezone.utc)-snapshot_dt.astimezone(timezone.utc)).total_seconds()
+          assert age_seconds >= -600
+          assert age_seconds <= 72*3600
+          assert data['source']['repository']=='poketaro1930katsu-sys/orz-ea-development'
+          assert data['source']['branch']=='main'
+          assert data['source']['authority']=='REPOSITORY_EVIDENCE'
+          assert data['source']['main_sha']=='d00e44751e43ba3dad08db295d6c5b168a34a13a'
+          assert data['canonical']['version']=='0.3.6'
+          assert data['canonical']['property_version']=='3.06'
+          assert data['canonical']['source_sha256']=='BA2D7876E23112B39239272D30594FA7530A9ECB37D9BCA5674877A2B1F2ED45'
+          assert data['canonical']['promotion_status']=='CANONICAL_PROMOTED'
+          assert data['canonical']['previous_version']=='0.3.5'
+          assert data['canonical']['previous_preserved'] is True
+          assert data['strategy_track']['last_formal_proof']=='GP014A'
+          assert data['strategy_track']['last_formal_result']=='PASS'
+          assert data['strategy_track']['next_gate']=='GP014B'
+          assert data['strategy_track']['runtime_authorized'] is False
+          assert data['implementation_gate']['name']=='V036_CANONICAL_PROMOTION'
+          assert data['implementation_gate']['status']=='V036_CANONICAL_EVIDENCE_RECORDED_NEXT_IMPLEMENTATION_UNAUTHORIZED'
+          assert data['implementation_gate']['source_implementation_authorized'] is False
+          assert data['implementation_gate']['next_version_label']=='UNRESOLVED_DO_NOT_INFER'
+          assert data['performance']['published'] is False
+          assert data['performance']['status']=='UNVERIFIED_NOT_PUBLISHED'
           assert data['safety']['fail_closed'] is True
-          assert data['safety']['real_money'] == 'PROHIBITED'
-          assert data['safety']['live_trade_control'] == 'NOT_PRESENT_IN_COMMAND_CENTER'
-          assert data['safety']['canonical_frozen_auto_edit'] == 'BLOCKED'
+          assert data['safety']['real_money']=='PROHIBITED'
+          assert data['safety']['live_trade_control']=='NOT_PRESENT_IN_COMMAND_CENTER'
+          assert data['safety']['canonical_frozen_auto_edit']=='BLOCKED'
+          assert data['safety']['command_center_trade_api']=='NONE'
+          assert data['safety']['private_evidence_exposed'] is False
+          assert data['safety']['credentials_exposed'] is False
           print('public status contract valid')
           PY
 
-      - name: Validate visible release and safety text
+      - name: Validate five functional app sections
         run: |
           python - <<'PY'
           from pathlib import Path
-          html = Path('index.html').read_text(encoding='utf-8')
-          required = [
-              'ORZ COMMAND CENTER v0.4.3',
-              'Public v0.4.3',
-              'GP014A / PASS',
-              'GP014A / PASS（照合済み）',
-              'SYNCED',
-              'GP014B / PENDING',
-              'リアルマネー</span><span class="pill red">禁止',
-              'Canonical / Frozen 自動変更</span><span class="pill red">禁止',
+          html=Path('index.html').read_text(encoding='utf-8')
+          js=Path('app.js').read_text(encoding='utf-8')
+          css=Path('styles.css').read_text(encoding='utf-8')
+          status=Path('public-status.json').read_text(encoding='utf-8')
+          for tab in ['command','strategy','evidence','performance','ai']:
+              assert f'data-tab="{tab}"' in html, tab
+              assert f'data-view="{tab}"' in html, tab
+          for required in [
+              'ORZ COMMAND CENTER v0.5.0',
+              'public-status.json',
+              'FAIL-CLOSED',
+              'リアルマネー',
+              'ORZ READ-ONLY NAVIGATOR',
+              'UNVERIFIED'
+          ]:
+              assert required in (html+js+status), required
+          assert 'KOMEI READ-ONLY NAVIGATOR' not in (html+js+status)
+          assert "VALID_TABS" in js
+          assert "validateStatus" in js
+          assert "enterFailClosed" in js
+          assert "cache:'no-store'" in js
+          assert ":focus-visible" in css
+          assert "prefers-reduced-motion" in css
+          assert 'aria-selected=' not in html
+          assert 'aria-current="page"' in html
+          assert "setAttribute('aria-current','page')" in js
+          assert "removeAttribute('aria-current')" in js
+          print('app sections, project isolation, and safety UI valid')
+          PY
+
+      - name: Validate snapshot freshness semantics and fail-closed gate
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          js=Path('app.js').read_text(encoding='utf-8')
+          freshness=js.split('function freshness',1)[1].split('function setBanner',1)[0]
+          render=js.split('function render(data)',1)[1].split('function fillList',1)[0]
+          failclosed=js.split('function enterFailClosed',1)[1].split('async function loadStatus',1)[0]
+          assert "label:'STALE'" in freshness
+          assert "label:'FUTURE'" in freshness
+          assert "ageMs < -10*60*1000" in freshness
+          assert "freshness(data.snapshot_generated_at_jst)" in render
+          assert "freshness(data.source.main_commit_at_jst)" not in render
+          stale_gate="if (f.level === 'error')"
+          fail_call="enterFailClosed(`PUBLIC_SNAPSHOT_${f.label}: ${f.detail}`)"
+          assert stale_gate in render
+          assert fail_call in render
+          assert render.index(stale_gate) < render.index('state=data;')
+          for stale_id in ['gp014bRuntime','sourceImplementation','nextVersionLabel','evidenceResult','sourceRepo','sourceMainSha','canonicalSha','evidenceCanonical','evidenceStrategyProof','sourceObserved']:
+              assert f"'{stale_id}'" in failclosed, stale_id
+          assert "document.querySelectorAll('[data-release]').forEach(el=>el.textContent='UNKNOWN')" in failclosed
+          assert "$('sourceObserved').dateTime=''" in failclosed
+          print('snapshot freshness semantics and fail-closed stale-value clearing valid')
+          PY
+
+      - name: Validate safety display authority and fail-closed clearing
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          html=Path('index.html').read_text(encoding='utf-8')
+          js=Path('app.js').read_text(encoding='utf-8')
+          safety_ids=['safetyFailClosed','safetyRealMoney','safetyLiveTrade','safetyCanonicalAutoEdit','safetyOrderSend']
+          for safety_id in safety_ids:
+              assert f'id="{safety_id}">確認中</span>' in html, safety_id
+          render=js.split('function render(data)',1)[1].split('function fillList',1)[0]
+          failclosed=js.split('function enterFailClosed',1)[1].split('async function loadStatus',1)[0]
+          for safety_id in safety_ids:
+              assert f"pill('{safety_id}'" in render, safety_id
+              assert f"'{safety_id}'" in failclosed, safety_id
+          assert "data.safety.fail_closed === true" in render
+          assert "data.safety.real_money === 'PROHIBITED'" in render
+          assert "data.safety.live_trade_control === 'NOT_PRESENT_IN_COMMAND_CENTER'" in render
+          assert "data.safety.canonical_frozen_auto_edit === 'BLOCKED'" in render
+          assert "data.safety.command_center_trade_api === 'NONE'" in render
+          print('safety display static authority bindings present')
+          PY
+          node - <<'JS'
+          const fs=require('fs');
+          const vm=require('vm');
+          let code=fs.readFileSync('app.js','utf8');
+          code=code.replace(/\}\)\(\);\s*$/, 'globalThis.__validateStatus=validateStatus;globalThis.__render=render;globalThis.__enterFailClosed=enterFailClosed;})();');
+          const elements=new Map();
+          const classList={add:()=>{},remove:()=>{},toggle:()=>false};
+          const makeEl=(id='')=>({id,textContent:'',className:'',dateTime:'',hidden:false,dataset:{},classList,setAttribute:()=>{},removeAttribute:()=>{},replaceChildren:()=>{},appendChild:()=>{},addEventListener:()=>{}});
+          const document={
+            body:{classList},
+            getElementById:(id)=>{if(!elements.has(id)) elements.set(id,makeEl(id)); return elements.get(id);},
+            querySelectorAll:()=>[],
+            createElement:()=>makeEl(),
+            addEventListener:()=>{}
+          };
+          const context={console,document};
+          vm.createContext(context);
+          vm.runInContext(code,context);
+          const baseline=JSON.parse(fs.readFileSync('public-status.json','utf8'));
+          context.__render(context.__validateStatus(structuredClone(baseline)));
+          const expected={
+            safetyFailClosed:['有効','pill green'],
+            safetyRealMoney:['禁止','pill red'],
+            safetyLiveTrade:['未搭載','pill red'],
+            safetyCanonicalAutoEdit:['禁止','pill red'],
+            safetyOrderSend:['不可','pill red'],
+          };
+          for (const [id,[text,className]] of Object.entries(expected)) {
+            const el=elements.get(id);
+            if (!el || el.textContent!==text || el.className!==className) throw new Error(`${id}: validated render mismatch`);
+          }
+          context.__enterFailClosed('NEGATIVE_CONTROL');
+          for (const id of Object.keys(expected)) {
+            const el=elements.get(id);
+            if (!el || el.textContent!=='UNKNOWN' || el.className!=='pill amber') throw new Error(`${id}: fail-closed clearing mismatch`);
+          }
+          console.log('safety display runtime binding and fail-closed clearing valid');
+          JS
+
+      - name: Validate runtime schema, exact-lineage, and semantic guards
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          js=Path('app.js').read_text(encoding='utf-8')
+          validate=js.split('function validateStatus',1)[1].split('function freshness',1)[0]
+          required=[
+              "project_identity_invalid",
+              "schema_version_invalid",
+              "release_channel_invalid",
+              "source_repository_invalid",
+              "source_branch_invalid",
+              "source_authority_invalid",
+              "source_main_sha_invalid",
+              "source_main_sha_mismatch",
+              "canonical_version_mismatch",
+              "canonical_sha256_invalid",
+              "canonical_sha256_mismatch",
+              "canonical_promotion_status_invalid",
+              "formal_proof_mismatch",
+              "formal_result_mismatch",
+              "strategy_status_mismatch",
+              "next_gate_mismatch",
+              "implementation_status_mismatch",
+              "next_version_label_mismatch",
+              "performance_publication_boundary_invalid",
+              "trade_api_boundary_invalid",
+              "private_evidence_boundary_invalid",
+              "credentials_boundary_invalid",
           ]
           for item in required:
-              assert item in html, item
-          forbidden = [
-              'GP013A / PASS',
-              'GAP_DETECTED',
-              'PASS（未照合',
+              assert item in validate, item
+          for required_path in [
+              "required(data,'project')",
+              "required(data,'source.authority')",
+              "required(data,'canonical.promotion_status')",
+          ]:
+              assert required_path in validate, required_path
+          exact_bindings=[
+              "const EXPECTED_SOURCE_MAIN_SHA = 'd00e44751e43ba3dad08db295d6c5b168a34a13a'",
+              "const EXPECTED_CANONICAL_VERSION = '0.3.6'",
+              "const EXPECTED_CANONICAL_SHA256 = 'BA2D7876E23112B39239272D30594FA7530A9ECB37D9BCA5674877A2B1F2ED45'",
+              "data.source.main_sha !== EXPECTED_SOURCE_MAIN_SHA",
+              "data.canonical.version !== EXPECTED_CANONICAL_VERSION",
+              "data.canonical.source_sha256 !== EXPECTED_CANONICAL_SHA256",
+              "const EXPECTED_FORMAL_PROOF = 'GP014A'",
+              "const EXPECTED_FORMAL_RESULT = 'PASS'",
+              "const EXPECTED_STRATEGY_STATUS = 'PENDING_SEPARATE_AUTHORIZATION'",
+              "const EXPECTED_NEXT_GATE = 'GP014B'",
+              "const EXPECTED_IMPLEMENTATION_STATUS = 'V036_CANONICAL_EVIDENCE_RECORDED_NEXT_IMPLEMENTATION_UNAUTHORIZED'",
+              "const EXPECTED_NEXT_VERSION_LABEL = 'UNRESOLVED_DO_NOT_INFER'",
           ]
-          for item in forbidden:
-              assert item not in html, item
-          print('visible public contract valid')
+          for item in exact_bindings:
+              assert item in js, item
+          print('runtime schema, exact-lineage, and semantic bindings present')
           PY
+
+      - name: Negative-control runtime lineage and semantic mismatches
+        run: |
+          node - <<'JS'
+          const fs=require('fs');
+          const vm=require('vm');
+          let code=fs.readFileSync('app.js','utf8');
+          code=code.replace(/\}\)\(\);\s*$/, 'globalThis.__validateStatus=validateStatus;})();');
+          const context={console,document:{addEventListener:()=>{}}};
+          vm.createContext(context);
+          vm.runInContext(code,context);
+          const baseline=JSON.parse(fs.readFileSync('public-status.json','utf8'));
+          context.__validateStatus(structuredClone(baseline));
+          const cases=[
+            ['source_main_sha_mismatch', d=>{d.source.main_sha='0000000000000000000000000000000000000000';}],
+            ['canonical_version_mismatch', d=>{d.canonical.version='9.9.9';}],
+            ['canonical_sha256_mismatch', d=>{d.canonical.source_sha256='AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA';}],
+            ['formal_proof_mismatch', d=>{d.strategy_track.last_formal_proof='GP014B';}],
+            ['formal_result_mismatch', d=>{d.strategy_track.last_formal_result='FAIL';}],
+            ['strategy_status_mismatch', d=>{d.strategy_track.status='AUTHORIZED';}],
+            ['next_gate_mismatch', d=>{d.strategy_track.next_gate='GP014C';}],
+            ['implementation_status_mismatch', d=>{d.implementation_gate.status='AUTHORIZED';}],
+            ['next_version_label_mismatch', d=>{d.implementation_gate.next_version_label='0.3.7';}],
+          ];
+          for (const [expected,mutate] of cases) {
+            const data=structuredClone(baseline);
+            mutate(data);
+            let seen='NO_ERROR';
+            try { context.__validateStatus(data); } catch (err) { seen=err.message; }
+            if (seen!==expected) throw new Error(`${expected}: got ${seen}`);
+          }
+          console.log('runtime exact-lineage and semantic negative controls valid');
+          JS
 
       - name: Validate service worker freshness policy
         run: |
           python - <<'PY'
           from pathlib import Path
-          sw = Path('sw.js').read_text(encoding='utf-8')
-          assert "orz-command-v0.4.3" in sw
-          assert "public-status.json" not in sw.split('const ASSETS=',1)[1].split(';',1)[0]
+          sw=Path('sw.js').read_text(encoding='utf-8')
+          assert "orz-command-v0.5.0" in sw
+          assets=sw.split('const ASSETS=',1)[1].split(';',1)[0]
+          assert 'public-status.json' not in assets
+          assert "url.pathname.endsWith('/public-status.json')" in sw
           assert "cache:'no-store'" in sw
+          assert 'caches.match(req)' in sw
           print('service worker freshness policy valid')
           PY
 
-# Validation only. No deployment or repository write is performed.
+      - name: Emit release-control digests
+        run: |
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
+          for raw in ['index.html','app.js','.github/workflows/public-pwa-ci.yml']:
+              data=Path(raw).read_bytes()
+              print(f'DIGEST {raw} size={len(data)} sha256={hashlib.sha256(data).hexdigest().upper()}')
+          PY
+
+      - name: Validate evidence manifest hashes
+        run: |
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          evidence=json.loads(Path('evidence/v0.5.0-rc1-manifest.json').read_text(encoding='utf-8'))
+          assert evidence['release_candidate']=='v0.5.0-rc1'
+          assert evidence['application_parent_commit']=='63c20e6dadb58e40160400663f7ea51f556b5d57'
+          assert evidence['prior_ci']['run_id']==34633571706
+          assert evidence['prior_ci']['run_number']==10
+          assert evidence['prior_ci']['conclusion']=='success'
+
+          expected_paths={
+              'index.html',
+              'styles.css',
+              'app.js',
+              'public-status.json',
+              'sw.js',
+              'manifest.webmanifest',
+              'README.md',
+              'README_PUBLIC.md',
+              '.github/workflows/public-pwa-ci.yml',
+              '.github/workflows/pwa-asset-integrity.yml',
+              'evidence/v0.5.0-rc1-pwa-assets.json',
+          }
+          paths=[item['path'] for item in evidence['files']]
+          assert len(paths)==len(set(paths)), 'duplicate evidence manifest path'
+          assert set(paths)==expected_paths, f'evidence manifest coverage mismatch: {sorted(set(paths)^expected_paths)}'
+          for raw_path in paths:
+              path=Path(raw_path)
+              assert not path.is_absolute(), raw_path
+              assert '..' not in path.parts, raw_path
+              assert path.is_file(), raw_path
+
+          for item in evidence['files']:
+              path=Path(item['path'])
+              data=path.read_bytes()
+              assert len(data)==item['size'], item['path']
+              assert hashlib.sha256(data).hexdigest().upper()==item['sha256'], item['path']
+          print('evidence manifest coverage and hashes valid')
+          PY
+
+      - name: Validate manifest and release consistency
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          manifest=json.loads(Path('manifest.webmanifest').read_text(encoding='utf-8'))
+          html=Path('index.html').read_text(encoding='utf-8')
+          readme=Path('README_PUBLIC.md').read_text(encoding='utf-8')
+          assert manifest['display']=='standalone'
+          assert manifest['start_url']=='./index.html#command'
+          assert 'v0.5.0' in html
+          assert 'v0.5.0-rc1' in readme
+          assert 'snapshot_generated_at_jst' in readme
+          assert 'Production deployment is a separate human decision.' in readme
+          print('manifest and release consistency valid')
+          PY
+
+# Validation only. No deployment, merge, repository secret, or runtime/trading operation is performed.
