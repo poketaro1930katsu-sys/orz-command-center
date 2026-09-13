@@ -133,7 +133,7 @@ jobs:
           print('snapshot freshness semantics and fail-closed stale-value clearing valid')
           PY
 
-      - name: Validate runtime schema and exact-lineage guards
+      - name: Validate runtime schema, exact-lineage, and semantic guards
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -152,6 +152,12 @@ jobs:
               "canonical_sha256_invalid",
               "canonical_sha256_mismatch",
               "canonical_promotion_status_invalid",
+              "formal_proof_mismatch",
+              "formal_result_mismatch",
+              "strategy_status_mismatch",
+              "next_gate_mismatch",
+              "implementation_status_mismatch",
+              "next_version_label_mismatch",
               "performance_publication_boundary_invalid",
               "trade_api_boundary_invalid",
               "private_evidence_boundary_invalid",
@@ -172,13 +178,19 @@ jobs:
               "data.source.main_sha !== EXPECTED_SOURCE_MAIN_SHA",
               "data.canonical.version !== EXPECTED_CANONICAL_VERSION",
               "data.canonical.source_sha256 !== EXPECTED_CANONICAL_SHA256",
+              "const EXPECTED_FORMAL_PROOF = 'GP014A'",
+              "const EXPECTED_FORMAL_RESULT = 'PASS'",
+              "const EXPECTED_STRATEGY_STATUS = 'PENDING_SEPARATE_AUTHORIZATION'",
+              "const EXPECTED_NEXT_GATE = 'GP014B'",
+              "const EXPECTED_IMPLEMENTATION_STATUS = 'V036_CANONICAL_EVIDENCE_RECORDED_NEXT_IMPLEMENTATION_UNAUTHORIZED'",
+              "const EXPECTED_NEXT_VERSION_LABEL = 'UNRESOLVED_DO_NOT_INFER'",
           ]
           for item in exact_bindings:
               assert item in js, item
-          print('runtime schema guards and exact-lineage bindings present')
+          print('runtime schema, exact-lineage, and semantic bindings present')
           PY
 
-      - name: Negative-control runtime lineage mismatches
+      - name: Negative-control runtime lineage and semantic mismatches
         run: |
           node - <<'JS'
           const fs=require('fs');
@@ -194,6 +206,12 @@ jobs:
             ['source_main_sha_mismatch', d=>{d.source.main_sha='0000000000000000000000000000000000000000';}],
             ['canonical_version_mismatch', d=>{d.canonical.version='9.9.9';}],
             ['canonical_sha256_mismatch', d=>{d.canonical.source_sha256='AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA';}],
+            ['formal_proof_mismatch', d=>{d.strategy_track.last_formal_proof='GP014B';}],
+            ['formal_result_mismatch', d=>{d.strategy_track.last_formal_result='FAIL';}],
+            ['strategy_status_mismatch', d=>{d.strategy_track.status='AUTHORIZED';}],
+            ['next_gate_mismatch', d=>{d.strategy_track.next_gate='GP014C';}],
+            ['implementation_status_mismatch', d=>{d.implementation_gate.status='AUTHORIZED';}],
+            ['next_version_label_mismatch', d=>{d.implementation_gate.next_version_label='0.3.7';}],
           ];
           for (const [expected,mutate] of cases) {
             const data=structuredClone(baseline);
@@ -202,7 +220,7 @@ jobs:
             try { context.__validateStatus(data); } catch (err) { seen=err.message; }
             if (seen!==expected) throw new Error(`${expected}: got ${seen}`);
           }
-          console.log('runtime exact-lineage negative controls valid');
+          console.log('runtime exact-lineage and semantic negative controls valid');
           JS
 
       - name: Validate service worker freshness policy
