@@ -3,6 +3,9 @@
 
   const APP_VERSION = 'v0.5.0';
   const STATUS_URL = './public-status.json';
+  const EXPECTED_SOURCE_MAIN_SHA = 'd00e44751e43ba3dad08db295d6c5b168a34a13a';
+  const EXPECTED_CANONICAL_VERSION = '0.3.6';
+  const EXPECTED_CANONICAL_SHA256 = 'BA2D7876E23112B39239272D30594FA7530A9ECB37D9BCA5674877A2B1F2ED45';
   const VALID_TABS = new Set(['command','strategy','evidence','performance','ai']);
   let state = null;
 
@@ -57,7 +60,10 @@
     if (data.source.branch !== 'main') throw new Error('source_branch_invalid');
     if (data.source.authority !== 'REPOSITORY_EVIDENCE') throw new Error('source_authority_invalid');
     if (!/^[0-9a-f]{40}$/.test(data.source.main_sha)) throw new Error('source_main_sha_invalid');
+    if (data.source.main_sha !== EXPECTED_SOURCE_MAIN_SHA) throw new Error('source_main_sha_mismatch');
+    if (data.canonical.version !== EXPECTED_CANONICAL_VERSION) throw new Error('canonical_version_mismatch');
     if (!/^[0-9A-F]{64}$/.test(data.canonical.source_sha256)) throw new Error('canonical_sha256_invalid');
+    if (data.canonical.source_sha256 !== EXPECTED_CANONICAL_SHA256) throw new Error('canonical_sha256_mismatch');
     if (data.canonical.promotion_status !== 'CANONICAL_PROMOTED') throw new Error('canonical_promotion_status_invalid');
     if (data.performance.published !== false || data.performance.status !== 'UNVERIFIED_NOT_PUBLISHED') throw new Error('performance_publication_boundary_invalid');
     if (data.safety.fail_closed !== true) throw new Error('fail_closed_must_be_true');
