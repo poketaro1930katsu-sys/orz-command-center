@@ -219,6 +219,16 @@ jobs:
           print('service worker freshness policy valid')
           PY
 
+      - name: Emit release-control digests
+        run: |
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
+          for raw in ['app.js','.github/workflows/public-pwa-ci.yml']:
+              data=Path(raw).read_bytes()
+              print(f'DIGEST {raw} size={len(data)} sha256={hashlib.sha256(data).hexdigest().upper()}')
+          PY
+
       - name: Validate evidence manifest hashes
         run: |
           python - <<'PY'
