@@ -133,6 +133,66 @@ jobs:
           print('snapshot freshness semantics and fail-closed stale-value clearing valid')
           PY
 
+      - name: Validate safety display authority and fail-closed clearing
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          html=Path('index.html').read_text(encoding='utf-8')
+          js=Path('app.js').read_text(encoding='utf-8')
+          safety_ids=['safetyFailClosed','safetyRealMoney','safetyLiveTrade','safetyCanonicalAutoEdit','safetyOrderSend']
+          for safety_id in safety_ids:
+              assert f'id="{safety_id}">確認中</span>' in html, safety_id
+          render=js.split('function render(data)',1)[1].split('function fillList',1)[0]
+          failclosed=js.split('function enterFailClosed',1)[1].split('async function loadStatus',1)[0]
+          for safety_id in safety_ids:
+              assert f"pill('{safety_id}'" in render, safety_id
+              assert f"'{safety_id}'" in failclosed, safety_id
+          assert "data.safety.fail_closed === true" in render
+          assert "data.safety.real_money === 'PROHIBITED'" in render
+          assert "data.safety.live_trade_control === 'NOT_PRESENT_IN_COMMAND_CENTER'" in render
+          assert "data.safety.canonical_frozen_auto_edit === 'BLOCKED'" in render
+          assert "data.safety.command_center_trade_api === 'NONE'" in render
+          print('safety display static authority bindings present')
+          PY
+          node - <<'JS'
+          const fs=require('fs');
+          const vm=require('vm');
+          let code=fs.readFileSync('app.js','utf8');
+          code=code.replace(/\}\)\(\);\s*$/, 'globalThis.__validateStatus=validateStatus;globalThis.__render=render;globalThis.__enterFailClosed=enterFailClosed;})();');
+          const elements=new Map();
+          const classList={add:()=>{},remove:()=>{},toggle:()=>false};
+          const makeEl=(id='')=>({id,textContent:'',className:'',dateTime:'',hidden:false,dataset:{},classList,setAttribute:()=>{},removeAttribute:()=>{},replaceChildren:()=>{},appendChild:()=>{},addEventListener:()=>{}});
+          const document={
+            body:{classList},
+            getElementById:(id)=>{if(!elements.has(id)) elements.set(id,makeEl(id)); return elements.get(id);},
+            querySelectorAll:()=>[],
+            createElement:()=>makeEl(),
+            addEventListener:()=>{}
+          };
+          const context={console,document};
+          vm.createContext(context);
+          vm.runInContext(code,context);
+          const baseline=JSON.parse(fs.readFileSync('public-status.json','utf8'));
+          context.__render(context.__validateStatus(structuredClone(baseline)));
+          const expected={
+            safetyFailClosed:['有効','pill green'],
+            safetyRealMoney:['禁止','pill red'],
+            safetyLiveTrade:['未搭載','pill red'],
+            safetyCanonicalAutoEdit:['禁止','pill red'],
+            safetyOrderSend:['不可','pill red'],
+          };
+          for (const [id,[text,className]] of Object.entries(expected)) {
+            const el=elements.get(id);
+            if (!el || el.textContent!==text || el.className!==className) throw new Error(`${id}: validated render mismatch`);
+          }
+          context.__enterFailClosed('NEGATIVE_CONTROL');
+          for (const id of Object.keys(expected)) {
+            const el=elements.get(id);
+            if (!el || el.textContent!=='UNKNOWN' || el.className!=='pill amber') throw new Error(`${id}: fail-closed clearing mismatch`);
+          }
+          console.log('safety display runtime binding and fail-closed clearing valid');
+          JS
+
       - name: Validate runtime schema, exact-lineage, and semantic guards
         run: |
           python - <<'PY'
@@ -242,7 +302,7 @@ jobs:
           python - <<'PY'
           import hashlib
           from pathlib import Path
-          for raw in ['app.js','.github/workflows/public-pwa-ci.yml']:
+          for raw in ['index.html','app.js','.github/workflows/public-pwa-ci.yml']:
               data=Path(raw).read_bytes()
               print(f'DIGEST {raw} size={len(data)} sha256={hashlib.sha256(data).hexdigest().upper()}')
           PY
