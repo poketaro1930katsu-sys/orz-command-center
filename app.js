@@ -6,6 +6,12 @@
   const EXPECTED_SOURCE_MAIN_SHA = 'd00e44751e43ba3dad08db295d6c5b168a34a13a';
   const EXPECTED_CANONICAL_VERSION = '0.3.6';
   const EXPECTED_CANONICAL_SHA256 = 'BA2D7876E23112B39239272D30594FA7530A9ECB37D9BCA5674877A2B1F2ED45';
+  const EXPECTED_FORMAL_PROOF = 'GP014A';
+  const EXPECTED_FORMAL_RESULT = 'PASS';
+  const EXPECTED_STRATEGY_STATUS = 'PENDING_SEPARATE_AUTHORIZATION';
+  const EXPECTED_NEXT_GATE = 'GP014B';
+  const EXPECTED_IMPLEMENTATION_STATUS = 'V036_CANONICAL_EVIDENCE_RECORDED_NEXT_IMPLEMENTATION_UNAUTHORIZED';
+  const EXPECTED_NEXT_VERSION_LABEL = 'UNRESOLVED_DO_NOT_INFER';
   const VALID_TABS = new Set(['command','strategy','evidence','performance','ai']);
   let state = null;
 
@@ -65,6 +71,12 @@
     if (!/^[0-9A-F]{64}$/.test(data.canonical.source_sha256)) throw new Error('canonical_sha256_invalid');
     if (data.canonical.source_sha256 !== EXPECTED_CANONICAL_SHA256) throw new Error('canonical_sha256_mismatch');
     if (data.canonical.promotion_status !== 'CANONICAL_PROMOTED') throw new Error('canonical_promotion_status_invalid');
+    if (data.strategy_track.last_formal_proof !== EXPECTED_FORMAL_PROOF) throw new Error('formal_proof_mismatch');
+    if (data.strategy_track.last_formal_result !== EXPECTED_FORMAL_RESULT) throw new Error('formal_result_mismatch');
+    if (data.strategy_track.status !== EXPECTED_STRATEGY_STATUS) throw new Error('strategy_status_mismatch');
+    if (data.strategy_track.next_gate !== EXPECTED_NEXT_GATE) throw new Error('next_gate_mismatch');
+    if (data.implementation_gate.status !== EXPECTED_IMPLEMENTATION_STATUS) throw new Error('implementation_status_mismatch');
+    if (data.implementation_gate.next_version_label !== EXPECTED_NEXT_VERSION_LABEL) throw new Error('next_version_label_mismatch');
     if (data.performance.published !== false || data.performance.status !== 'UNVERIFIED_NOT_PUBLISHED') throw new Error('performance_publication_boundary_invalid');
     if (data.safety.fail_closed !== true) throw new Error('fail_closed_must_be_true');
     if (data.safety.real_money !== 'PROHIBITED') throw new Error('real_money_boundary_invalid');
