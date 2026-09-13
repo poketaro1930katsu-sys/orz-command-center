@@ -133,7 +133,7 @@ jobs:
           print('snapshot freshness semantics and fail-closed stale-value clearing valid')
           PY
 
-      - name: Validate runtime schema guards
+      - name: Validate runtime schema and exact-lineage guards
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -147,7 +147,10 @@ jobs:
               "source_branch_invalid",
               "source_authority_invalid",
               "source_main_sha_invalid",
+              "source_main_sha_mismatch",
+              "canonical_version_mismatch",
               "canonical_sha256_invalid",
+              "canonical_sha256_mismatch",
               "canonical_promotion_status_invalid",
               "performance_publication_boundary_invalid",
               "trade_api_boundary_invalid",
@@ -162,8 +165,45 @@ jobs:
               "required(data,'canonical.promotion_status')",
           ]:
               assert required_path in validate, required_path
-          print('runtime schema guards and provenance identity bindings valid')
+          exact_bindings=[
+              "const EXPECTED_SOURCE_MAIN_SHA = 'd00e44751e43ba3dad08db295d6c5b168a34a13a'",
+              "const EXPECTED_CANONICAL_VERSION = '0.3.6'",
+              "const EXPECTED_CANONICAL_SHA256 = 'BA2D7876E23112B39239272D30594FA7530A9ECB37D9BCA5674877A2B1F2ED45'",
+              "data.source.main_sha !== EXPECTED_SOURCE_MAIN_SHA",
+              "data.canonical.version !== EXPECTED_CANONICAL_VERSION",
+              "data.canonical.source_sha256 !== EXPECTED_CANONICAL_SHA256",
+          ]
+          for item in exact_bindings:
+              assert item in js, item
+          print('runtime schema guards and exact-lineage bindings present')
           PY
+
+      - name: Negative-control runtime lineage mismatches
+        run: |
+          node - <<'JS'
+          const fs=require('fs');
+          const vm=require('vm');
+          let code=fs.readFileSync('app.js','utf8');
+          code=code.replace(/\}\)\(\);\s*$/, 'globalThis.__validateStatus=validateStatus;})();');
+          const context={console,document:{addEventListener:()=>{}}};
+          vm.createContext(context);
+          vm.runInContext(code,context);
+          const baseline=JSON.parse(fs.readFileSync('public-status.json','utf8'));
+          context.__validateStatus(structuredClone(baseline));
+          const cases=[
+            ['source_main_sha_mismatch', d=>{d.source.main_sha='0000000000000000000000000000000000000000';}],
+            ['canonical_version_mismatch', d=>{d.canonical.version='9.9.9';}],
+            ['canonical_sha256_mismatch', d=>{d.canonical.source_sha256='AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA';}],
+          ];
+          for (const [expected,mutate] of cases) {
+            const data=structuredClone(baseline);
+            mutate(data);
+            let seen='NO_ERROR';
+            try { context.__validateStatus(data); } catch (err) { seen=err.message; }
+            if (seen!==expected) throw new Error(`${expected}: got ${seen}`);
+          }
+          console.log('runtime exact-lineage negative controls valid');
+          JS
 
       - name: Validate service worker freshness policy
         run: |
