@@ -17,6 +17,7 @@
 
   const $ = (id) => document.getElementById(id);
   const text = (id, value) => { const el=$(id); if(el) el.textContent = value ?? '—'; };
+  const pill = (id, value, level='amber') => { const el=$(id); if(el) { el.textContent=value ?? 'UNKNOWN'; el.className=`pill ${level}`; } };
   const shortSha = (value) => value && value.length > 12 ? value.slice(0,12) : (value || '—');
 
   function required(obj, path) {
@@ -151,6 +152,11 @@
     text('performanceTitle', data.performance.published ? '公開検証成績' : '検証済み公開成績は未掲載');
     text('performanceText', data.performance.message);
     text('performanceStatus', data.performance.status);
+    pill('safetyFailClosed', data.safety.fail_closed === true ? '有効' : 'UNKNOWN', data.safety.fail_closed === true ? 'green' : 'amber');
+    pill('safetyRealMoney', data.safety.real_money === 'PROHIBITED' ? '禁止' : 'UNKNOWN', data.safety.real_money === 'PROHIBITED' ? 'red' : 'amber');
+    pill('safetyLiveTrade', data.safety.live_trade_control === 'NOT_PRESENT_IN_COMMAND_CENTER' ? '未搭載' : 'UNKNOWN', data.safety.live_trade_control === 'NOT_PRESENT_IN_COMMAND_CENTER' ? 'red' : 'amber');
+    pill('safetyCanonicalAutoEdit', data.safety.canonical_frozen_auto_edit === 'BLOCKED' ? '禁止' : 'UNKNOWN', data.safety.canonical_frozen_auto_edit === 'BLOCKED' ? 'red' : 'amber');
+    pill('safetyOrderSend', data.safety.command_center_trade_api === 'NONE' ? '不可' : 'UNKNOWN', data.safety.command_center_trade_api === 'NONE' ? 'red' : 'amber');
     renderAi('next');
 
     setBanner(
@@ -198,6 +204,7 @@
       'proofMeta','planningMeta','freshnessMeta','gp014bRuntime','sourceImplementation','nextVersionLabel','evidenceResult',
       'sourceRepo','sourceMainSha','canonicalSha','evidenceCanonical','evidenceStrategyProof','sourceObserved'];
     unknownIds.forEach(id=>text(id,'UNKNOWN'));
+    ['safetyFailClosed','safetyRealMoney','safetyLiveTrade','safetyCanonicalAutoEdit','safetyOrderSend'].forEach(id=>pill(id,'UNKNOWN','amber'));
     if ($('sourceObserved')) $('sourceObserved').dateTime='';
     text('canonicalMeta','Repository Evidence 未確認');
     text('nextActionTitle','STOP / VERIFY');
